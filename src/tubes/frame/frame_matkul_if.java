@@ -32,25 +32,22 @@ public class frame_matkul_if extends javax.swing.JFrame {
         database = dbsetting.SettingPanel("DBDatabase");
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
-        tabel_mahasiswa_if.setModel(tableModel);
+        tabel_matakuliah_if.setModel(tableModel);
         
         settableload();
     }
-    String data[] = new String[5];
+    String data[] = new String[2];
     private void settableload(){
         String stat = "";
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
             Statement stt = kon.createStatement();
-            String SQL = "select * from t_mahasiswa";
+            String SQL = "select * from t_mata_kuliah";
             ResultSet res = stt.executeQuery(SQL);
             while (res.next()) {
             data[0] = res.getString(1);
             data[1] = res.getString(2);
-            data[2] = res.getString(3);
-            data[3] = res.getString(4);
-            data[4] = res.getString(5);
             
             tableModel.addRow(data);
             }
@@ -70,10 +67,10 @@ public class frame_matkul_if extends javax.swing.JFrame {
     private javax.swing.table.DefaultTableModel getDefaultTableModel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"NIM", "Nama Mahasiswa", "Tempat Lahir", "Tanggal Lahir", "Alamat"}
+                new String[]{"Kode Mata Kuliah", "Nama Mata Kuliah"}
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -109,7 +106,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         txt_namaMk_if = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabel_mahasiswa_if = new javax.swing.JTable();
+        tabel_matakuliah_if = new javax.swing.JTable();
         btn_tambah_if = new javax.swing.JButton();
         btn_ubah_if = new javax.swing.JButton();
         btn_hapus_if = new javax.swing.JButton();
@@ -194,7 +191,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("Nama M.K");
 
-        tabel_mahasiswa_if.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_matakuliah_if.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -205,7 +202,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tabel_mahasiswa_if);
+        jScrollPane2.setViewportView(tabel_matakuliah_if);
 
         btn_tambah_if.setText("Tambah");
         btn_tambah_if.addActionListener(new java.awt.event.ActionListener() {
@@ -389,7 +386,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
     private javax.swing.JPanel panelIsi;
     private javax.swing.JPanel panelIsi2;
     private javax.swing.JPanel panelJudul;
-    private javax.swing.JTable tabel_mahasiswa_if;
+    private javax.swing.JTable tabel_matakuliah_if;
     private javax.swing.JTextField txt_cari_mk_if;
     private javax.swing.JTextField txt_namaMk_if;
     private javax.swing.JTextField txt_noMk_if;
