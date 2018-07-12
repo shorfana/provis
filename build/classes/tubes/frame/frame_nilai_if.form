@@ -269,7 +269,7 @@
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="txt_uas_if" min="-2" pref="44" max="-2" attributes="0"/>
                                               <Component id="txt_uts_if" min="-2" pref="44" max="-2" attributes="0"/>
-                                              <Component id="txt_noMk_if" min="-2" pref="115" max="-2" attributes="0"/>
+                                              <Component id="txt_kodeMk_if" min="-2" pref="115" max="-2" attributes="0"/>
                                               <Component id="jYearChooser1" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -314,7 +314,7 @@
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txt_nim_if" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_noMk_if" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_kodeMk_if" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -531,7 +531,10 @@
                     <Property name="text" type="java.lang.String" value="Kode MK"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txt_noMk_if">
+                <Component class="javax.swing.JTextField" name="txt_kodeMk_if">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_kodeMk_ifActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel14">
                   <Properties>
