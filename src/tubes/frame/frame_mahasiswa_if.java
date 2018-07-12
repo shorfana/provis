@@ -4,8 +4,12 @@
  * and open the template in the editor.
  */
 package tubes.frame;
-
+import javax.swing.*;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.table.DefaultTableModel;
+import tubes.koneksi.database.koneksi;
 
 /**
  *
@@ -16,9 +20,70 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
     /**
      * Creates new form frame_mahasiswa_if
      */
+    // declarasi variabel program if
+    koneksi dbsetting;
+    String driver,database,user,pass;
+    Object tabel;
+    
     public frame_mahasiswa_if() {
         initComponents();
+        dbsetting = new koneksi();
+        driver = dbsetting.SettingPanel("DBDriver");
+        database = dbsetting.SettingPanel("DBDatabase");
+        user = dbsetting.SettingPanel("DBUsername");
+        pass = dbsetting.SettingPanel("DBPassword");
+        tabel_mahasiswa_if.setModel(tableModel);
+        txt_tanggal_lahir_if.setDateFormatString("yyyy-mm-dd");
+        
+        settableload();
     }
+    String data[] = new String[5];
+    private void settableload(){
+        String stat = "";
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select * from t_mahasiswa";
+            ResultSet res = stt.executeQuery(SQL);
+            while (res.next()) {
+            data[0] = res.getString(1);
+            data[1] = res.getString(2);
+            data[2] = res.getString(3);
+            data[3] = res.getString(4);
+            data[4] = res.getString(5);
+            
+            tableModel.addRow(data);
+            }
+            res.close();
+            stt.close();
+            kon.close();
+            
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+    
+    private javax.swing.table.DefaultTableModel tableModel = getDefaultTableModel();
+    private javax.swing.table.DefaultTableModel getDefaultTableModel() {
+        return new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"NIM", "Nama Mahasiswa", "Tempat Lahir", "Tanggal Lahir", "Alamat"}
+        ) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,7 +116,7 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabel_mahasiswa_if = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         Ubah = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -150,7 +215,7 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_mahasiswa_if.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -161,7 +226,7 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tabel_mahasiswa_if);
 
         jButton1.setText("Tambah");
 
@@ -352,16 +417,18 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel panelCaridata;
     private javax.swing.JPanel panelIsi;
     private javax.swing.JPanel panelIsi2;
     private javax.swing.JPanel panelJudul;
+    private javax.swing.JTable tabel_mahasiswa_if;
     private javax.swing.JTextField txt_cari_nim_if;
     private javax.swing.JTextField txt_nama_if;
     private javax.swing.JTextField txt_nim_if;
     private com.toedter.calendar.JDateChooser txt_tanggal_lahir_if;
     private javax.swing.JTextField txt_tempat_lahir_if;
     // End of variables declaration//GEN-END:variables
+
+   
 }

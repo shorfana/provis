@@ -11,9 +11,8 @@ package tubes.frame;
  */
 public class frame_utama_if extends javax.swing.JFrame {
 
-    /**
-     * Creates new form frame_utama_if
-     */
+    
+    
     public frame_utama_if() {
         initComponents();
     }
