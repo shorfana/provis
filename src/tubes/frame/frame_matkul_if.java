@@ -129,6 +129,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
         txt_cari_mk_if = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
+        cmb_pilCari = new javax.swing.JComboBox<>();
         panelIsi2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txt_kodeMk_if = new javax.swing.JTextField();
@@ -179,6 +180,14 @@ public class frame_matkul_if extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Masukan Mata Kuliah");
 
+        txt_cari_mk_if.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_cari_mk_ifKeyReleased(evt);
+            }
+        });
+
+        cmb_pilCari.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kode", "Nama" }));
+
         javax.swing.GroupLayout panelCaridataLayout = new javax.swing.GroupLayout(panelCaridata);
         panelCaridata.setLayout(panelCaridataLayout);
         panelCaridataLayout.setHorizontalGroup(
@@ -188,12 +197,14 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator2)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
                 .addGap(2, 2, 2))
             .addGroup(panelCaridataLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
+                .addComponent(cmb_pilCari, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(txt_cari_mk_if, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -208,7 +219,8 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txt_cari_mk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_cari_mk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmb_pilCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 17, Short.MAX_VALUE))
         );
 
@@ -512,6 +524,54 @@ public class frame_matkul_if extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_hapus_ifActionPerformed
 
+    private void txt_cari_mk_ifKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cari_mk_ifKeyReleased
+        // TODO add your handling code here:
+        tableModel.setRowCount(0);
+        String cari;
+        cari = txt_cari_mk_if.getText();
+        String SQL = null;
+        try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                                    database,
+                                    user,
+                                    pass);
+                Statement stt = kon.createStatement();
+                switch (cmb_pilCari.getSelectedItem().toString()){
+                    case "Kode":
+                         SQL = "SELECT * FROM t_mata_kuliah WHERE kd_mk"
+                                 + " LIKE '%"+cari+"%'";
+                         break;
+                    case "Nama":
+                            SQL = "SELECT * FROM t_mata_kuliah WHERE nama_mk"
+                                 + " LIKE '%"+cari+"%'";
+                         break;
+                    default:
+                        break;
+                
+                }
+               
+                
+                ResultSet res = stt.executeQuery(SQL);
+                while (res.next()){
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                tableModel.addRow(data);
+                }
+                res.close();
+                stt.close();
+                kon.close();
+                
+            } catch (Exception ex) 
+            {
+                JOptionPane.showMessageDialog(null, 
+                        ex.getMessage(),"Error",
+                        JOptionPane.INFORMATION_MESSAGE
+                        );
+                System.exit(0);
+            }
+    }//GEN-LAST:event_txt_cari_mk_ifKeyReleased
+
     /**
      * @param args the command line arguments
      */ 
@@ -538,13 +598,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(frame_matkul_if.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -561,6 +615,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
     private javax.swing.JButton btn_simpan_if;
     private javax.swing.JButton btn_tambah_if;
     private javax.swing.JButton btn_ubah_if;
+    private javax.swing.JComboBox<String> cmb_pilCari;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
