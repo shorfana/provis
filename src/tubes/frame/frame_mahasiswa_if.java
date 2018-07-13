@@ -4,10 +4,15 @@
  * and open the template in the editor.
  */
 package tubes.frame;
+
+import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import tubes.koneksi.database.koneksi;
 
@@ -22,23 +27,24 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
      */
     // declarasi variabel program if
     koneksi dbsetting;
-    String driver,database,user,pass;
+    String driver, database, user, pass;
     Object tabel;
-    
+
     public frame_mahasiswa_if() {
         initComponents();
+        JDateChooser format_tanggal_if = new JDateChooser();
         dbsetting = new koneksi();
         driver = dbsetting.SettingPanel("DBDriver");
         database = dbsetting.SettingPanel("DBDatabase");
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         tabel_mahasiswa_if.setModel(tableModel);
-        txt_tanggal_lahir_if.setDateFormatString("yyyy-mm-dd");
-        
+
         settableload();
     }
     String data[] = new String[5];
-    private void settableload(){
+
+    private void settableload() {
         String stat = "";
         try {
             Class.forName(driver);
@@ -47,18 +53,18 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
             String SQL = "select * from t_mahasiswa";
             ResultSet res = stt.executeQuery(SQL);
             while (res.next()) {
-            data[0] = res.getString(1);
-            data[1] = res.getString(2);
-            data[2] = res.getString(3);
-            data[3] = res.getString(4);
-            data[4] = res.getString(5);
-            
-            tableModel.addRow(data);
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+                data[2] = res.getString(3);
+                data[3] = res.getString(4);
+                data[4] = res.getString(5);
+
+                tableModel.addRow(data);
             }
             res.close();
             stt.close();
             kon.close();
-            
+
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
@@ -66,8 +72,9 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
             System.exit(0);
         }
     }
-    
+
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTableModel();
+
     private javax.swing.table.DefaultTableModel getDefaultTableModel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
@@ -83,7 +90,29 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
         };
     }
     
+    public void membersihkan_teks(){
+        txt_nim_if.setText("");
+        txt_nama_if.setText("");
+        txt_tanggal_lahir_if.setDate(null);
+        txt_tempat_lahir_if.setText("");
+        txt_alamat_if.setText("");
+    }
     
+    int row = 0;
+    public void nonaktif_teks(){
+        txt_nim_if.setEnabled(false);
+        txt_nama_if.setEnabled(false);
+        txt_tanggal_lahir_if.setEnabled(false);
+        txt_tempat_lahir_if.setEnabled(false);
+        txt_alamat_if.setEnabled(false);        
+    }
+    public void aktif_teks(){
+        txt_nim_if.setEnabled(true);
+        txt_nama_if.setEnabled(true);
+        txt_tanggal_lahir_if.setEnabled(true);
+        txt_tempat_lahir_if.setEnabled(true);
+        txt_alamat_if.setEnabled(true);         
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,15 +143,15 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txt_alamat_if = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabel_mahasiswa_if = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        Ubah = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btn_tambah_if = new javax.swing.JButton();
+        btn_ubah_if = new javax.swing.JButton();
+        btn_hapus_if = new javax.swing.JButton();
+        btn_simpan_if = new javax.swing.JButton();
+        btn_batal_if = new javax.swing.JButton();
+        btn_keluar_if = new javax.swing.JButton();
         txt_tanggal_lahir_if = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -211,9 +240,9 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Alamat");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txt_alamat_if.setColumns(20);
+        txt_alamat_if.setRows(5);
+        jScrollPane1.setViewportView(txt_alamat_if);
 
         tabel_mahasiswa_if.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -226,19 +255,51 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabel_mahasiswa_if.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_mahasiswa_ifMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabel_mahasiswa_if);
 
-        jButton1.setText("Tambah");
+        btn_tambah_if.setText("Tambah");
+        btn_tambah_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tambah_ifActionPerformed(evt);
+            }
+        });
 
-        Ubah.setText("Ubah");
+        btn_ubah_if.setText("Ubah");
+        btn_ubah_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubah_ifActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Hapus");
+        btn_hapus_if.setText("Hapus");
+        btn_hapus_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapus_ifActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Simpan");
+        btn_simpan_if.setText("Simpan");
+        btn_simpan_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpan_ifActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Batal");
+        btn_batal_if.setText("Batal");
 
-        jButton6.setText("Keluar");
+        btn_keluar_if.setText("Keluar");
+        btn_keluar_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_keluar_ifActionPerformed(evt);
+            }
+        });
+
+        txt_tanggal_lahir_if.setDateFormatString("yyyy-MM-dd");
 
         javax.swing.GroupLayout panelIsi2Layout = new javax.swing.GroupLayout(panelIsi2);
         panelIsi2.setLayout(panelIsi2Layout);
@@ -274,17 +335,17 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
                         .addComponent(jScrollPane2))
                     .addGroup(panelIsi2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton1)
+                        .addComponent(btn_tambah_if)
                         .addGap(48, 48, 48)
-                        .addComponent(Ubah)
+                        .addComponent(btn_ubah_if)
                         .addGap(59, 59, 59)
-                        .addComponent(jButton3)
+                        .addComponent(btn_hapus_if)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
-                        .addComponent(jButton4)
+                        .addComponent(btn_simpan_if)
                         .addGap(68, 68, 68)
-                        .addComponent(jButton5)
+                        .addComponent(btn_batal_if)
                         .addGap(62, 62, 62)
-                        .addComponent(jButton6)))
+                        .addComponent(btn_keluar_if)))
                 .addContainerGap())
         );
         panelIsi2Layout.setVerticalGroup(
@@ -313,12 +374,12 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(Ubah)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
+                    .addComponent(btn_tambah_if)
+                    .addComponent(btn_ubah_if)
+                    .addComponent(btn_hapus_if)
+                    .addComponent(btn_simpan_if)
+                    .addComponent(btn_batal_if)
+                    .addComponent(btn_keluar_if))
                 .addGap(16, 16, 16))
         );
 
@@ -362,6 +423,173 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_tambah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambah_ifActionPerformed
+        membersihkan_teks();
+        txt_nim_if.requestFocus();
+        btn_simpan_if.setEnabled(true);
+        btn_ubah_if.setEnabled(false);
+        btn_hapus_if.setEnabled(false);
+        btn_keluar_if.setEnabled(false);
+        aktif_teks();
+    }//GEN-LAST:event_btn_tambah_ifActionPerformed
+
+    private void btn_simpan_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpan_ifActionPerformed
+        // TODO add your handling code here:
+        
+        String data[]=new String[5];
+        
+        if (txt_nim_if.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Kolom NIM Harus diisi");
+            txt_nim_if.requestFocus();
+        }else if(txt_tanggal_lahir_if.getDate()==null){
+            JOptionPane.showMessageDialog(null,"Kolom tanggal Lahir harus diisi");
+            txt_tanggal_lahir_if.requestFocus();
+        }else if(txt_nama_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Nama harus diisi");
+            txt_nama_if.requestFocus();
+        }else if(txt_tempat_lahir_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Tempat Lahir harus diisi");
+            txt_tempat_lahir_if.requestFocus();
+        }else if(txt_alamat_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null,"Kolom Alamat harus diisi");
+            txt_alamat_if.requestFocus();
+        }else{
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                                database,
+                                user,
+                                pass);
+                Statement stt = kon.createStatement();
+                String    SQL = "INSERT INTO `java_akdmk_10116465`.`t_mahasiswa`"
+                        + "(`nim`,`nama`,`ttl`,`tgl_lahir`,`alamat`) "
+                        + "VALUES "
+                        + "( '"+txt_nim_if.getText()+"','"+txt_nama_if.getText()+"',"
+                        + "'"+txt_tempat_lahir_if.getText()+"',"
+                        + "'"+((JTextField)txt_tanggal_lahir_if.getDateEditor().getUiComponent()).getText()+"',"
+                        + "'"+txt_alamat_if.getText()+"')";
+                stt.executeUpdate(SQL);
+                data[0] = txt_nim_if.getText();
+                data[1] = txt_nama_if.getText();
+                data[2] = txt_tempat_lahir_if.getText();
+                data[3] = ((JTextField)txt_tanggal_lahir_if.getDateEditor().getUiComponent()).getText();
+                data[4] = txt_alamat_if.getText();
+                tableModel.insertRow(0, data);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan_if.setEnabled(false);
+                btn_keluar_if.setEnabled(true);
+                nonaktif_teks();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,
+                        e.getMessage(),"Error",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_btn_simpan_ifActionPerformed
+//setText(tableModel.getValueAt(row, 3).toString());
+    public void tampil_field(){
+        row = tabel_mahasiswa_if.getSelectedRow();
+        txt_nim_if.setText(tableModel.getValueAt(row, 0).toString());
+        txt_nama_if.setText(tableModel.getValueAt(row, 1).toString());
+        txt_tempat_lahir_if.setText(tableModel.getValueAt(row, 2).toString());
+        try {
+            DefaultTableModel model = (DefaultTableModel)tabel_mahasiswa_if.getModel();
+            int srow = tabel_mahasiswa_if.getSelectedRow();
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse((String)model.getValueAt(srow, 3).toString());
+            txt_tanggal_lahir_if.setDate(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(frame_mahasiswa_if.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        txt_alamat_if.setText(tableModel.getValueAt(row, 4).toString());
+        btn_simpan_if.setEnabled(false);
+        btn_ubah_if.setEnabled(true);
+        btn_hapus_if.setEnabled(true);
+        btn_batal_if.setEnabled(false);
+        aktif_teks();
+    }
+    
+    private void btn_ubah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubah_ifActionPerformed
+        // TODO add your handling code here:
+        String nim = txt_nim_if.getText();
+        String nama = txt_nama_if.getText();
+        String tempat_lahir = txt_tempat_lahir_if.getText();
+        String tanggal_lahir = ((JTextField)txt_tanggal_lahir_if.getDateEditor().getUiComponent()).getText();
+        String alamat = txt_alamat_if.getText();
+        
+        if ((nim.isEmpty())) {
+            JOptionPane.showMessageDialog(null, "NIM Tidak Boleh Kosong!!!");
+            txt_nim_if.requestFocus();
+        }else if(alamat.isEmpty()){
+            JOptionPane.showMessageDialog(null,"Alamat Tidak Boleh Kosong!!!");
+            txt_alamat_if.requestFocus();
+        }else{
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database,user,pass);
+                Statement stt = kon.createStatement();
+                String    SQL = "UPDATE `t_mahasiswa`"
+                                +"SET `nim`='"+nim+"',"
+                                +"`nama`='"+nama+"',"
+                                +"`ttl`='"+tempat_lahir+"',"
+                                +"`tgl_lahir`='"+tanggal_lahir+"',"
+                                +"`alamat`='"+alamat+"'"
+                                +"WHERE"
+                                +"`nim`='"+tableModel.getValueAt(row,0).toString()+"';";
+                stt.executeUpdate(SQL);
+                data[0] = nim;
+                data[1] = nama;
+                data[2] = tempat_lahir;
+                data[3] = tanggal_lahir;
+                data[4] = alamat;
+                tableModel.removeRow(row);
+                tableModel.insertRow(row, data);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan_if.setEnabled(false);
+                nonaktif_teks();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+    }
+    }//GEN-LAST:event_btn_ubah_ifActionPerformed
+
+    private void tabel_mahasiswa_ifMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_mahasiswa_ifMouseClicked
+        // TODO add your handling code here:
+        if (evt.getClickCount()==1) {
+            tampil_field();
+        }
+    }//GEN-LAST:event_tabel_mahasiswa_ifMouseClicked
+
+    private void btn_hapus_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapus_ifActionPerformed
+        // TODO add your handling code here:
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(database,user,pass);
+            Statement stt = kon.createStatement();
+            String SQL = "DELETE from t_mahasiswa "
+                    + "where "
+                    + "nim='"+tableModel.getValueAt(row,0).toString()+"'";
+            stt.executeUpdate(SQL);
+            tableModel.removeRow(row);
+            stt.close();
+            kon.close();
+            membersihkan_teks();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_btn_hapus_ifActionPerformed
+
+    private void btn_keluar_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluar_ifActionPerformed
+        // TODO add your handling code here:
+        frame_utama_if frm_utama = new frame_utama_if();
+        frm_utama.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_keluar_ifActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -398,12 +626,12 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Ubah;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JButton btn_batal_if;
+    private javax.swing.JButton btn_hapus_if;
+    private javax.swing.JButton btn_keluar_if;
+    private javax.swing.JButton btn_simpan_if;
+    private javax.swing.JButton btn_tambah_if;
+    private javax.swing.JButton btn_ubah_if;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -417,12 +645,12 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel panelCaridata;
     private javax.swing.JPanel panelIsi;
     private javax.swing.JPanel panelIsi2;
     private javax.swing.JPanel panelJudul;
     private javax.swing.JTable tabel_mahasiswa_if;
+    private javax.swing.JTextArea txt_alamat_if;
     private javax.swing.JTextField txt_cari_nim_if;
     private javax.swing.JTextField txt_nama_if;
     private javax.swing.JTextField txt_nim_if;
@@ -430,5 +658,4 @@ public class frame_mahasiswa_if extends javax.swing.JFrame {
     private javax.swing.JTextField txt_tempat_lahir_if;
     // End of variables declaration//GEN-END:variables
 
-   
 }
