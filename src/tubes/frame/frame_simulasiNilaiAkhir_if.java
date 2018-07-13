@@ -32,7 +32,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         database = dbsetting.SettingPanel("DBDatabase");
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
-        tabel_mahasiswa_if.setModel(tableModel);
+        tabel_simulas_if.setModel(tableModel);
         
         settableload();
     }
@@ -118,7 +118,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         txt_prsAbsen_if = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabel_mahasiswa_if = new javax.swing.JTable();
+        tabel_simulas_if = new javax.swing.JTable();
         btn_tambah_if = new javax.swing.JButton();
         btn_ubah_if = new javax.swing.JButton();
         btn_hapus_if = new javax.swing.JButton();
@@ -189,7 +189,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Nama Mata Kuliah");
 
-        tabel_mahasiswa_if.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_simulas_if.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -200,7 +200,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tabel_mahasiswa_if);
+        jScrollPane2.setViewportView(tabel_simulas_if);
 
         btn_tambah_if.setText("Tambah");
 
@@ -393,7 +393,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                             .addComponent(jLabel16)
                             .addComponent(txt_tgs3_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel20)
                             .addComponent(txt_uts_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(6, 6, 6)
@@ -519,7 +519,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
     private javax.swing.JPanel panelIsi;
     private javax.swing.JPanel panelIsi2;
     private javax.swing.JPanel panelJudul;
-    private javax.swing.JTable tabel_mahasiswa_if;
+    private javax.swing.JTable tabel_simulas_if;
     private javax.swing.JTextField txt_kehadiran_if;
     private javax.swing.JTextField txt_kodeMk_if;
     private javax.swing.JTextField txt_prsAbsen_if;

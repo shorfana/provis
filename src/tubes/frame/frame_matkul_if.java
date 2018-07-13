@@ -63,6 +63,35 @@ public class frame_matkul_if extends javax.swing.JFrame {
         }
     }
     
+    public void membersihkan_teks(){
+    txt_kodeMk_if.setText("");
+    txt_namaMk_if.setText("");
+    }
+    
+    public void nonaktifkan_teks(){
+        txt_kodeMk_if.setEnabled(false);
+        txt_namaMk_if.setEnabled(false);
+    }
+    
+    public void aktif_teks(){
+        txt_kodeMk_if.setEnabled(true);
+        txt_namaMk_if.setEnabled(true);
+    }
+    
+    int row = 0;
+    public void tampilfield(){
+        row=tabel_matakuliah_if.getSelectedRow();
+          txt_kodeMk_if.setText(tableModel.getValueAt(row, 0).toString());
+        txt_namaMk_if.setText(tableModel.getValueAt(row, 1).toString());
+        btn_simpan_if.setEnabled(false);
+        btn_ubah_if.setEnabled(true);
+        btn_hapus_if.setEnabled(true);
+        btn_batal_if.setEnabled(false);
+        aktif_teks();
+    }
+    
+    
+    
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTableModel();
     private javax.swing.table.DefaultTableModel getDefaultTableModel() {
         return new javax.swing.table.DefaultTableModel(
@@ -102,7 +131,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         panelIsi2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        txt_noMk_if = new javax.swing.JTextField();
+        txt_kodeMk_if = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         txt_namaMk_if = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -202,6 +231,11 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabel_matakuliah_if.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_matakuliah_ifMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabel_matakuliah_if);
 
         btn_tambah_if.setText("Tambah");
@@ -212,10 +246,25 @@ public class frame_matkul_if extends javax.swing.JFrame {
         });
 
         btn_ubah_if.setText("Ubah");
+        btn_ubah_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubah_ifActionPerformed(evt);
+            }
+        });
 
         btn_hapus_if.setText("Hapus");
+        btn_hapus_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapus_ifActionPerformed(evt);
+            }
+        });
 
         btn_simpan_if.setText("Simpan");
+        btn_simpan_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpan_ifActionPerformed(evt);
+            }
+        });
 
         btn_batal_if.setText("Batal");
         btn_batal_if.addActionListener(new java.awt.event.ActionListener() {
@@ -236,7 +285,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
                         .addGap(25, 25, 25)
                         .addComponent(jLabel4)
                         .addGap(23, 23, 23)
-                        .addComponent(txt_noMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_kodeMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addGap(24, 24, 24)
@@ -266,7 +315,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txt_noMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_kodeMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(txt_namaMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, Short.MAX_VALUE)
@@ -324,15 +373,148 @@ public class frame_matkul_if extends javax.swing.JFrame {
 
     private void btn_tambah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambah_ifActionPerformed
         // TODO add your handling code here:
+        membersihkan_teks();
+        txt_kodeMk_if.requestFocus();
+        btn_simpan_if.setEnabled(true);
+        btn_ubah_if.setEnabled(false);
+        btn_hapus_if.setEnabled(false);
+        btn_keluar_if.setEnabled(false);
+        aktif_teks();
     }//GEN-LAST:event_btn_tambah_ifActionPerformed
 
     private void btn_batal_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batal_ifActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_batal_ifActionPerformed
 
+    private void tabel_matakuliah_ifMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_matakuliah_ifMouseClicked
+        // TODO add your handling code here:
+        if(evt.getClickCount()==1)
+                {
+                    tampilfield();
+                }
+    }//GEN-LAST:event_tabel_matakuliah_ifMouseClicked
+
+    private void btn_simpan_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpan_ifActionPerformed
+        // TODO add your handling code here:
+        String data[]=new String[2];
+        
+        if (txt_kodeMk_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null,
+                    "Kode M.K tidak boleh kosong, silahkan dilengkapi");
+        }
+           else if (txt_namaMk_if.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Nama M.K tidak boleh kosong, silahkan dilengkapi");
+        }
+        else{
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                                    database,
+                                    user,
+                                    pass);
+                Statement stt = kon.createStatement();
+                String    SQL = "INSERT INTO t_mata_kuliah(kd_mk,"
+                                + "nama_mk)"
+                                + "VALUES"
+                                 +"('"+txt_kodeMk_if.getText()+"',"
+                                 +"' "+txt_namaMk_if.getText()+"')";
+                
+                stt.executeUpdate(SQL);
+                data[0] = txt_kodeMk_if.getText();
+                data[1] = txt_namaMk_if.getText();
+                
+                tableModel.insertRow(0, data);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan_if.setEnabled(false);
+                nonaktifkan_teks();
+                
+                
+            } catch (Exception ex) 
+            {
+                JOptionPane.showMessageDialog(null, 
+                        ex.getMessage(),"Error",
+                        JOptionPane.INFORMATION_MESSAGE
+                        );
+            }
+        }
+    }//GEN-LAST:event_btn_simpan_ifActionPerformed
+
+    private void btn_ubah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubah_ifActionPerformed
+        // TODO add your handling code here:
+        String kodeMk =  txt_kodeMk_if.getText();
+        String namaMk =  txt_namaMk_if.getText();
+        if (txt_kodeMk_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null,
+                    "Kode M.K tidak boleh kosong, silahkan dilengkapi");
+        }
+           else if (txt_namaMk_if.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Nama M.K tidak boleh kosong, silahkan dilengkapi");
+        }
+        else{
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                                    database,
+                                    user,
+                                    pass);
+                Statement stt = kon.createStatement();
+                String    SQL = "UPDATE t_mata_kuliah SET kd_mk='"+kodeMk+"', "
+                        + "nama_mk='"+namaMk+"' WHERE kd_mk='"+
+                        tableModel.getValueAt(row, 0).toString()+"';";
+                
+                stt.executeUpdate(SQL);
+                data[0] = kodeMk;
+                data[1] = namaMk;
+                
+                tableModel.removeRow(row);
+                tableModel.insertRow(row, data);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan_if.setEnabled(false);
+                nonaktifkan_teks();
+                
+                
+            } catch (Exception ex) 
+            {
+                JOptionPane.showMessageDialog(null, 
+                        ex.getMessage(),"Error",
+                        JOptionPane.INFORMATION_MESSAGE
+                        );
+            }
+        }
+        
+    }//GEN-LAST:event_btn_ubah_ifActionPerformed
+
+    private void btn_hapus_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapus_ifActionPerformed
+        // TODO add your handling code here:
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(
+                                    database,
+                                    user,
+                                    pass);
+                Statement stt = kon.createStatement();
+                String    SQL = "Delete From t_mata_kuliah where kd_mk='"+
+                        tableModel.getValueAt(row, 0).toString()+"'";
+                
+                stt.executeUpdate(SQL);
+                tableModel.removeRow(row);
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
+    }//GEN-LAST:event_btn_hapus_ifActionPerformed
+
     /**
      * @param args the command line arguments
-     */
+     */ 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -355,6 +537,12 @@ public class frame_matkul_if extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(frame_matkul_if.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -388,8 +576,8 @@ public class frame_matkul_if extends javax.swing.JFrame {
     private javax.swing.JPanel panelJudul;
     private javax.swing.JTable tabel_matakuliah_if;
     private javax.swing.JTextField txt_cari_mk_if;
+    private javax.swing.JTextField txt_kodeMk_if;
     private javax.swing.JTextField txt_namaMk_if;
-    private javax.swing.JTextField txt_noMk_if;
     // End of variables declaration//GEN-END:variables
 
    
