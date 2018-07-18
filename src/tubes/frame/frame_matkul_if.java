@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package tubes.frame;
+
 import javax.swing.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -22,9 +23,9 @@ public class frame_matkul_if extends javax.swing.JFrame {
      */
     // declarasi variabel program if
     koneksi dbsetting;
-    String driver,database,user,pass;
+    String driver, database, user, pass;
     Object tabel;
-    
+
     public frame_matkul_if() {
         initComponents();
         dbsetting = new koneksi();
@@ -33,11 +34,12 @@ public class frame_matkul_if extends javax.swing.JFrame {
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         tabel_matakuliah_if.setModel(tableModel);
-        
+
         settableload();
     }
     String data[] = new String[2];
-    private void settableload(){
+
+    private void settableload() {
         String stat = "";
         try {
             Class.forName(driver);
@@ -46,15 +48,15 @@ public class frame_matkul_if extends javax.swing.JFrame {
             String SQL = "select * from t_mata_kuliah";
             ResultSet res = stt.executeQuery(SQL);
             while (res.next()) {
-            data[0] = res.getString(1);
-            data[1] = res.getString(2);
-            
-            tableModel.addRow(data);
+                data[0] = res.getString(1);
+                data[1] = res.getString(2);
+
+                tableModel.addRow(data);
             }
             res.close();
             stt.close();
             kon.close();
-            
+
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
@@ -62,26 +64,27 @@ public class frame_matkul_if extends javax.swing.JFrame {
             System.exit(0);
         }
     }
-    
-    public void membersihkan_teks(){
-    txt_kodeMk_if.setText("");
-    txt_namaMk_if.setText("");
+
+    public void membersihkan_teks() {
+        txt_kodeMk_if.setText("");
+        txt_namaMk_if.setText("");
     }
-    
-    public void nonaktifkan_teks(){
+
+    public void nonaktifkan_teks() {
         txt_kodeMk_if.setEnabled(false);
         txt_namaMk_if.setEnabled(false);
     }
-    
-    public void aktif_teks(){
+
+    public void aktif_teks() {
         txt_kodeMk_if.setEnabled(true);
         txt_namaMk_if.setEnabled(true);
     }
-    
+
     int row = 0;
-    public void tampilfield(){
-        row=tabel_matakuliah_if.getSelectedRow();
-          txt_kodeMk_if.setText(tableModel.getValueAt(row, 0).toString());
+
+    public void tampilfield() {
+        row = tabel_matakuliah_if.getSelectedRow();
+        txt_kodeMk_if.setText(tableModel.getValueAt(row, 0).toString());
         txt_namaMk_if.setText(tableModel.getValueAt(row, 1).toString());
         btn_simpan_if.setEnabled(false);
         btn_ubah_if.setEnabled(true);
@@ -89,10 +92,9 @@ public class frame_matkul_if extends javax.swing.JFrame {
         btn_batal_if.setEnabled(false);
         aktif_teks();
     }
-    
-    
-    
+
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTableModel();
+
     private javax.swing.table.DefaultTableModel getDefaultTableModel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
@@ -107,8 +109,6 @@ public class frame_matkul_if extends javax.swing.JFrame {
             }
         };
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -129,7 +129,6 @@ public class frame_matkul_if extends javax.swing.JFrame {
         txt_cari_mk_if = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
-        cmb_pilCari = new javax.swing.JComboBox<>();
         panelIsi2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txt_kodeMk_if = new javax.swing.JTextField();
@@ -186,8 +185,6 @@ public class frame_matkul_if extends javax.swing.JFrame {
             }
         });
 
-        cmb_pilCari.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kode", "Nama" }));
-
         javax.swing.GroupLayout panelCaridataLayout = new javax.swing.GroupLayout(panelCaridata);
         panelCaridata.setLayout(panelCaridataLayout);
         panelCaridataLayout.setHorizontalGroup(
@@ -202,9 +199,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
             .addGroup(panelCaridataLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addGap(12, 12, 12)
-                .addComponent(cmb_pilCari, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(22, 22, 22)
                 .addComponent(txt_cari_mk_if, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -219,8 +214,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txt_cari_mk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmb_pilCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_cari_mk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 17, Short.MAX_VALUE))
         );
 
@@ -391,7 +385,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
         btn_ubah_if.setEnabled(false);
         btn_hapus_if.setEnabled(false);
         btn_keluar_if.setEnabled(false);
-        aktif_teks();
+        nonaktifkan_teks();
     }//GEN-LAST:event_btn_tambah_ifActionPerformed
 
     private void btn_batal_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batal_ifActionPerformed
@@ -400,88 +394,81 @@ public class frame_matkul_if extends javax.swing.JFrame {
 
     private void tabel_matakuliah_ifMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_matakuliah_ifMouseClicked
         // TODO add your handling code here:
-        if(evt.getClickCount()==1)
-                {
-                    tampilfield();
-                }
+        if (evt.getClickCount() == 1) {
+            tampilfield();
+        }
     }//GEN-LAST:event_tabel_matakuliah_ifMouseClicked
 
     private void btn_simpan_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpan_ifActionPerformed
         // TODO add your handling code here:
-        String data[]=new String[2];
-        
-        if (txt_kodeMk_if.getText().isEmpty()){
+        String data[] = new String[2];
+
+        if (txt_kodeMk_if.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null,
                     "Kode M.K tidak boleh kosong, silahkan dilengkapi");
-        }
-           else if (txt_namaMk_if.getText().isEmpty()) {
+        } else if (txt_namaMk_if.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null,
                     "Nama M.K tidak boleh kosong, silahkan dilengkapi");
-        }
-        else{
+        } else {
             try {
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(
-                                    database,
-                                    user,
-                                    pass);
+                        database,
+                        user,
+                        pass);
                 Statement stt = kon.createStatement();
-                String    SQL = "INSERT INTO t_mata_kuliah(kd_mk,"
-                                + "nama_mk)"
-                                + "VALUES"
-                                 +"('"+txt_kodeMk_if.getText()+"',"
-                                 +"' "+txt_namaMk_if.getText()+"')";
-                
+                String SQL = "INSERT INTO t_mata_kuliah(kd_mk,"
+                        + "nama_mk)"
+                        + "VALUES"
+                        + "('" + txt_kodeMk_if.getText() + "',"
+                        + "' " + txt_namaMk_if.getText() + "')";
+
                 stt.executeUpdate(SQL);
                 data[0] = txt_kodeMk_if.getText();
                 data[1] = txt_namaMk_if.getText();
-                
+
                 tableModel.insertRow(0, data);
                 stt.close();
                 kon.close();
                 membersihkan_teks();
                 btn_simpan_if.setEnabled(false);
                 nonaktifkan_teks();
-                
-                
-            } catch (Exception ex) 
-            {
-                JOptionPane.showMessageDialog(null, 
-                        ex.getMessage(),"Error",
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,
+                        ex.getMessage(), "Error",
                         JOptionPane.INFORMATION_MESSAGE
-                        );
+                );
             }
         }
     }//GEN-LAST:event_btn_simpan_ifActionPerformed
 
     private void btn_ubah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubah_ifActionPerformed
         // TODO add your handling code here:
-        String kodeMk =  txt_kodeMk_if.getText();
-        String namaMk =  txt_namaMk_if.getText();
-        if (txt_kodeMk_if.getText().isEmpty()){
+        String kodeMk = txt_kodeMk_if.getText();
+        String namaMk = txt_namaMk_if.getText();
+        if (txt_kodeMk_if.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null,
                     "Kode M.K tidak boleh kosong, silahkan dilengkapi");
-        }
-           else if (txt_namaMk_if.getText().isEmpty()) {
+        } else if (txt_namaMk_if.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null,
                     "Nama M.K tidak boleh kosong, silahkan dilengkapi");
-        }
-        else{
+        } else {
             try {
                 Class.forName(driver);
                 Connection kon = DriverManager.getConnection(
-                                    database,
-                                    user,
-                                    pass);
+                        database,
+                        user,
+                        pass);
                 Statement stt = kon.createStatement();
-                String    SQL = "UPDATE t_mata_kuliah SET kd_mk='"+kodeMk+"', "
-                        + "nama_mk='"+namaMk+"' WHERE kd_mk='"+
-                        tableModel.getValueAt(row, 0).toString()+"';";
-                
+                String SQL = "UPDATE t_mata_kuliah SET kd_mk='" + kodeMk + "', "
+                        + "nama_mk='" + namaMk + "' WHERE kd_mk='"
+                        + tableModel.getValueAt(row, 0).toString() + "';";
+
                 stt.executeUpdate(SQL);
                 data[0] = kodeMk;
                 data[1] = namaMk;
-                
+
                 tableModel.removeRow(row);
                 tableModel.insertRow(row, data);
                 stt.close();
@@ -489,17 +476,15 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 membersihkan_teks();
                 btn_simpan_if.setEnabled(false);
                 nonaktifkan_teks();
-                
-                
-            } catch (Exception ex) 
-            {
-                JOptionPane.showMessageDialog(null, 
-                        ex.getMessage(),"Error",
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,
+                        ex.getMessage(), "Error",
                         JOptionPane.INFORMATION_MESSAGE
-                        );
+                );
             }
         }
-        
+
     }//GEN-LAST:event_btn_ubah_ifActionPerformed
 
     private void btn_hapus_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapus_ifActionPerformed
@@ -507,18 +492,18 @@ public class frame_matkul_if extends javax.swing.JFrame {
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(
-                                    database,
-                                    user,
-                                    pass);
-                Statement stt = kon.createStatement();
-                String    SQL = "Delete From t_mata_kuliah where kd_mk='"+
-                        tableModel.getValueAt(row, 0).toString()+"'";
-                
-                stt.executeUpdate(SQL);
-                tableModel.removeRow(row);
-                stt.close();
-                kon.close();
-                membersihkan_teks();
+                    database,
+                    user,
+                    pass);
+            Statement stt = kon.createStatement();
+            String SQL = "Delete From t_mata_kuliah where kd_mk='"
+                    + tableModel.getValueAt(row, 0).toString() + "'";
+
+            stt.executeUpdate(SQL);
+            tableModel.removeRow(row);
+            stt.close();
+            kon.close();
+            membersihkan_teks();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -531,50 +516,38 @@ public class frame_matkul_if extends javax.swing.JFrame {
         cari = txt_cari_mk_if.getText();
         String SQL = null;
         try {
-                Class.forName(driver);
-                Connection kon = DriverManager.getConnection(
-                                    database,
-                                    user,
-                                    pass);
-                Statement stt = kon.createStatement();
-                switch (cmb_pilCari.getSelectedItem().toString()){
-                    case "Kode":
-                         SQL = "SELECT * FROM t_mata_kuliah WHERE kd_mk"
-                                 + " LIKE '%"+cari+"%'";
-                         break;
-                    case "Nama":
-                            SQL = "SELECT * FROM t_mata_kuliah WHERE nama_mk"
-                                 + " LIKE '%"+cari+"%'";
-                         break;
-                    default:
-                        break;
-                
-                }
-               
-                
-                ResultSet res = stt.executeQuery(SQL);
-                while (res.next()){
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(
+                    database,
+                    user,
+                    pass);
+            Statement stt = kon.createStatement();
+            SQL = "SELECT * FROM t_mata_kuliah WHERE kd_mk"
+                    + " LIKE '%" + cari + "%' OR "
+                    + "nama_mk LIKE '%" + cari + "%'";
+
+            ResultSet res = stt.executeQuery(SQL);
+            while (res.next()) {
                 data[0] = res.getString(1);
                 data[1] = res.getString(2);
                 tableModel.addRow(data);
-                }
-                res.close();
-                stt.close();
-                kon.close();
-                
-            } catch (Exception ex) 
-            {
-                JOptionPane.showMessageDialog(null, 
-                        ex.getMessage(),"Error",
-                        JOptionPane.INFORMATION_MESSAGE
-                        );
-                System.exit(0);
             }
+            res.close();
+            stt.close();
+            kon.close();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null,
+                    ex.getMessage(), "Error",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            System.exit(0);
+        }
     }//GEN-LAST:event_txt_cari_mk_ifKeyReleased
 
     /**
      * @param args the command line arguments
-     */ 
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -598,7 +571,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(frame_matkul_if.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -615,7 +588,6 @@ public class frame_matkul_if extends javax.swing.JFrame {
     private javax.swing.JButton btn_simpan_if;
     private javax.swing.JButton btn_tambah_if;
     private javax.swing.JButton btn_ubah_if;
-    private javax.swing.JComboBox<String> cmb_pilCari;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -635,5 +607,4 @@ public class frame_matkul_if extends javax.swing.JFrame {
     private javax.swing.JTextField txt_namaMk_if;
     // End of variables declaration//GEN-END:variables
 
-   
 }
