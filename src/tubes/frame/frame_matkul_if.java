@@ -80,9 +80,10 @@ public class frame_matkul_if extends javax.swing.JFrame {
         txt_namaMk_if.setEnabled(true);
     }
 
-    int row = 0;
+    int row = -1;
 
     public void tampilfield() {
+        row = 0;
         row = tabel_matakuliah_if.getSelectedRow();
         txt_kodeMk_if.setText(tableModel.getValueAt(row, 0).toString());
         txt_namaMk_if.setText(tableModel.getValueAt(row, 1).toString());
@@ -385,7 +386,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
         btn_ubah_if.setEnabled(false);
         btn_hapus_if.setEnabled(false);
         btn_keluar_if.setEnabled(false);
-        nonaktifkan_teks();
+        aktif_teks();
     }//GEN-LAST:event_btn_tambah_ifActionPerformed
 
     private void btn_batal_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batal_ifActionPerformed
@@ -445,6 +446,10 @@ public class frame_matkul_if extends javax.swing.JFrame {
 
     private void btn_ubah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubah_ifActionPerformed
         // TODO add your handling code here:
+        //validasi belum memilih row
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else {
         String kodeMk = txt_kodeMk_if.getText();
         String namaMk = txt_namaMk_if.getText();
         if (txt_kodeMk_if.getText().isEmpty()) {
@@ -484,11 +489,16 @@ public class frame_matkul_if extends javax.swing.JFrame {
                 );
             }
         }
-
+        }
     }//GEN-LAST:event_btn_ubah_ifActionPerformed
 
     private void btn_hapus_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapus_ifActionPerformed
         // TODO add your handling code here:
+        //validasi belum meilih row
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else {
+        
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(
@@ -506,6 +516,7 @@ public class frame_matkul_if extends javax.swing.JFrame {
             membersihkan_teks();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
+        }
         }
     }//GEN-LAST:event_btn_hapus_ifActionPerformed
 
