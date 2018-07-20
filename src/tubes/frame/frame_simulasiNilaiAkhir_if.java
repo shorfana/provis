@@ -32,35 +32,77 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         database = dbsetting.SettingPanel("DBDatabase");
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
-        tabel_simulas_if.setModel(tableModel);
+        tabel_mahasiswa_if.setModel(tableModel);
+        tampilComboif();
         
         settableload();
     }
-    String data[] = new String[15];
+    
+    public void tampilkodemkif(){
+       try {
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select kd_mk from t_mata_kuliah where nama_mk='"+cmb_mata_kuliah_if.getSelectedItem()+"'";
+            ResultSet res = stt.executeQuery(SQL);
+            while (res.next()){
+                Object[] ob = new Object[1];
+                ob[0]=  res.getString(1);
+                
+                txt_kodeMk_if.setText((String) ob[0]);
+            }
+            res.close();
+            stt.close();
+        } catch (Exception e) {
+        } 
+    }
+    
+    public void tampilComboif(){
+       try {
+            Connection kon = DriverManager.getConnection(database, user, pass);
+            Statement stt = kon.createStatement();
+            String SQL = "select nama_mk from t_mata_kuliah";
+            ResultSet res = stt.executeQuery(SQL);
+            while (res.next()){
+                cmb_mata_kuliah_if.addItem(res.getString("nama_mk"));
+                
+            }
+            res.close();
+            stt.close();
+        } catch (Exception e) {
+        } 
+    }
+    
+    int row = -1;
+    String data[] = new String[20];
     private void settableload(){
         String stat = "";
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(database, user, pass);
             Statement stt = kon.createStatement();
-            String SQL = "select * from t_nilai";
+            String SQL = "select * from t_simulasi_nilai";
             ResultSet res = stt.executeQuery(SQL);
             while (res.next()) {
-            data[0] = res.getString(1);
-            data[1] = res.getString(2);
-            data[2] = res.getString(3);
-            data[3] = res.getString(4);
-            data[4] = res.getString(5);
-            data[5] = res.getString(6);
-            data[6] = res.getString(7);
-            data[7] = res.getString(8);
-            data[8] = res.getString(9);
-            data[9] = res.getString(10);
-            data[10] = res.getString(11);
-            data[11] = res.getString(12);
-            data[12] = res.getString(13);
-            data[13] = res.getString(14);
-            data[14] = res.getString(15);
+            data[0] = res.getString("kode_simulasi");
+            data[1] = res.getString("kd_mk");
+            data[2] = res.getString("nama_mk");
+            data[3] = res.getString("persentase_absen");
+            data[4] = res.getString("persentase_tugas");
+            data[5] = res.getString("persentase_uts");
+            data[6] = res.getString("persentase_uas");
+            data[7] = res.getString("absensi");
+            data[8] = res.getString("tgs1");
+            data[9] = res.getString("tgs2");
+            data[10] = res.getString("tgs3");
+            data[11] = res.getString("uts");
+            data[12] = res.getString("uas");
+            data[13] = res.getString("nilai_absen");
+            data[14] = res.getString("nilai_tugas");
+            data[15] = res.getString("nilai_uts");
+            data[16] = res.getString("nilai_uas");
+            data[17] = res.getString("nilai_akhir");
+            data[18] = res.getString("indek");
+            data[19] = res.getString("keterangan");
             
             tableModel.addRow(data);
             }
@@ -76,18 +118,81 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         }
     }
     
+    public void membersihkan_teks(){
+        txt_kodeMk_if.setText("");
+        txt_prsAbsen_if.setText("");
+        txt_prsTugas_if.setText("");
+        txt_prsUTS_if.setText("");
+        txt_prsUAS_if.setText("");
+        txt_kehadiran_if.setText("");
+        txt_tgs1_if.setText("");
+        txt_tgs2_if.setText("");
+        txt_tgs3_if.setText("");
+        txt_uts_if.setText("");
+        txt_uas_if.setText("");
+    }
+    
+    public void nonaktifkan_teks(){
+        txt_kodeMk_if.setEnabled(false);
+        txt_prsAbsen_if.setEnabled(false);
+        txt_prsTugas_if.setEnabled(false);
+        txt_prsUTS_if.setEnabled(false);
+        txt_prsUAS_if.setEnabled(false);
+        txt_kehadiran_if.setEnabled(false);
+        txt_tgs1_if.setEnabled(false);
+        txt_tgs2_if.setEnabled(false);
+        txt_tgs3_if.setEnabled(false);
+        txt_uts_if.setEnabled(false);
+        txt_uas_if.setEnabled(false);
+    }
+    
+    public void aktif_teks(){
+        txt_kodeMk_if.setEnabled(true);
+        txt_prsAbsen_if.setEnabled(true);
+        txt_prsTugas_if.setEnabled(true);
+        txt_prsUTS_if.setEnabled(true);
+        txt_prsUAS_if.setEnabled(true);
+        txt_kehadiran_if.setEnabled(true);
+        txt_tgs1_if.setEnabled(true);
+        txt_tgs2_if.setEnabled(true);
+        txt_tgs3_if.setEnabled(true);
+        txt_uts_if.setEnabled(true);
+        txt_uas_if.setEnabled(true);
+    }
+    
+    public void tampil_field(){
+        row = tabel_mahasiswa_if.getSelectedRow();
+        txt_kodeMk_if.setText(tableModel.getValueAt(row, 1).toString());
+        cmb_mata_kuliah_if.getModel().setSelectedItem(tableModel.getValueAt(row, 2).toString());
+        txt_prsAbsen_if.setText(tableModel.getValueAt(row, 3).toString());
+        txt_prsTugas_if.setText(tableModel.getValueAt(row, 4).toString());
+        txt_prsUTS_if.setText(tableModel.getValueAt(row, 5).toString());
+        txt_prsUAS_if.setText(tableModel.getValueAt(row, 6).toString());
+        txt_kehadiran_if.setText(tableModel.getValueAt(row, 7).toString());
+        txt_tgs1_if.setText(tableModel.getValueAt(row, 8).toString());
+        txt_tgs2_if.setText(tableModel.getValueAt(row, 9).toString());
+        txt_tgs3_if.setText(tableModel.getValueAt(row, 10).toString());
+        txt_uts_if.setText(tableModel.getValueAt(row, 11).toString());
+        txt_uas_if.setText(tableModel.getValueAt(row, 12).toString());
+        
+        btn_ubah_if.setEnabled(true);
+        
+    }
+    
     private javax.swing.table.DefaultTableModel tableModel = getDefaultTableModel();
     private javax.swing.table.DefaultTableModel getDefaultTableModel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Nama M.K","Persentase Absen","Persentase Tugas",""
+                new String[]{"id","kode mk","Nama M.K","Persentase Absen","Persentase Tugas",""
                         + "Persentase UTS","Persentase UAS", "Absensi", "Tgs "
                         + "1","Tgs 2","Tgs 3","UTS","UAS","Nilai Absen","Nilai"
                         + " Tugas","Nilai UTS","Nilai UAS","Nilai Akhir","Index"
                         + "", "Keterangan"}
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
+                    , false, false, false, false, false, false, false, false, false
+                    , false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -118,14 +223,14 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         txt_prsAbsen_if = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabel_simulas_if = new javax.swing.JTable();
+        tabel_mahasiswa_if = new javax.swing.JTable();
         btn_tambah_if = new javax.swing.JButton();
         btn_ubah_if = new javax.swing.JButton();
         btn_hapus_if = new javax.swing.JButton();
         btn_simpan_if = new javax.swing.JButton();
         btn_batal_if = new javax.swing.JButton();
         btn_keluar_if = new javax.swing.JButton();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cmb_mata_kuliah_if = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         txt_prsTugas_if = new javax.swing.JTextField();
@@ -189,7 +294,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Nama Mata Kuliah");
 
-        tabel_simulas_if.setModel(new javax.swing.table.DefaultTableModel(
+        tabel_mahasiswa_if.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -200,24 +305,48 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(tabel_simulas_if);
+        tabel_mahasiswa_if.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabel_mahasiswa_ifMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tabel_mahasiswa_if);
 
         btn_tambah_if.setText("Tambah");
+        btn_tambah_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tambah_ifActionPerformed(evt);
+            }
+        });
 
         btn_ubah_if.setText("Ubah");
+        btn_ubah_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubah_ifActionPerformed(evt);
+            }
+        });
 
         btn_hapus_if.setText("Hapus");
+        btn_hapus_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapus_ifActionPerformed(evt);
+            }
+        });
 
         btn_simpan_if.setText("Simpan");
+        btn_simpan_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simpan_ifActionPerformed(evt);
+            }
+        });
 
         btn_batal_if.setText("Batal");
 
         btn_keluar_if.setText("Keluar");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        cmb_mata_kuliah_if.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                cmb_mata_kuliah_ifActionPerformed(evt);
             }
         });
 
@@ -292,7 +421,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jLabel8))
                                             .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jComboBox2, 0, 132, Short.MAX_VALUE)
+                                                .addComponent(cmb_mata_kuliah_if, 0, 132, Short.MAX_VALUE)
                                                 .addComponent(txt_kodeMk_if))
                                             .addGroup(panelIsi2Layout.createSequentialGroup()
                                                 .addComponent(txt_prsTugas_if, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -330,15 +459,15 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                     .addGroup(panelIsi2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btn_tambah_if)
-                        .addGap(48, 48, 48)
+                        .addGap(46, 46, 46)
                         .addComponent(btn_ubah_if)
                         .addGap(59, 59, 59)
                         .addComponent(btn_hapus_if)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(93, 93, 93)
                         .addComponent(btn_simpan_if)
-                        .addGap(68, 68, 68)
+                        .addGap(67, 67, 67)
                         .addComponent(btn_batal_if)
-                        .addGap(62, 62, 62)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btn_keluar_if)))
                 .addContainerGap())
         );
@@ -348,7 +477,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmb_mata_kuliah_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelIsi2Layout.createSequentialGroup()
@@ -400,9 +529,9 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel21)
                     .addComponent(txt_uas_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_tambah_if)
                     .addComponent(btn_ubah_if)
@@ -410,7 +539,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
                     .addComponent(btn_simpan_if)
                     .addComponent(btn_batal_if)
                     .addComponent(btn_keluar_if))
-                .addGap(16, 16, 16))
+                .addGap(94, 94, 94))
         );
 
         javax.swing.GroupLayout panelIsiLayout = new javax.swing.GroupLayout(panelIsi);
@@ -421,10 +550,10 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         );
         panelIsiLayout.setVerticalGroup(
             panelIsiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelIsiLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIsiLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelIsi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel1.add(panelIsi, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 730, 560));
@@ -439,16 +568,306 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void cmb_mata_kuliah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_mata_kuliah_ifActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+        tampilkodemkif();
+    }//GEN-LAST:event_cmb_mata_kuliah_ifActionPerformed
+
+    private void btn_tambah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambah_ifActionPerformed
+        // TODO add your handling code here:
+        membersihkan_teks();
+        txt_kodeMk_if.requestFocus();
+        btn_simpan_if.setEnabled(true);
+        btn_ubah_if.setEnabled(false);
+        btn_hapus_if.setEnabled(false);
+        btn_keluar_if.setEnabled(false);
+        aktif_teks();
+    }//GEN-LAST:event_btn_tambah_ifActionPerformed
+
+    
+    private void btn_simpan_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpan_ifActionPerformed
+        // TODO add your handling code here:
+        String data[] = new String[19];
+        
+        double pabsen = Double.valueOf(txt_prsAbsen_if.getText()) / 100;
+        double hadir2 = Double.valueOf(txt_kehadiran_if.getText());
+        double hadir = Double.valueOf(txt_kehadiran_if.getText()) / 14;
+        double nilaiAbsen = hadir * 100 * pabsen;
+        double ptugas = Double.valueOf(txt_prsTugas_if.getText()) / 100;
+        double tgs1 = Double.valueOf(txt_tgs1_if.getText());
+        double tgs2 = Double.valueOf(txt_tgs2_if.getText());
+        double tgs3 = Double.valueOf(txt_tgs3_if.getText());
+        double nilaiTugas = ((tgs1+tgs2+tgs3)/3) * ptugas ;
+        double puts = Double.valueOf(txt_prsUTS_if.getText()) ;
+        double nilaiUTS = (Double.valueOf(txt_uts_if.getText()) * puts)/100;
+        double puas = Double.valueOf(txt_prsUAS_if.getText()) ;
+        double nilaiUAS = (Double.valueOf(txt_uas_if.getText()) * puas)/100;
+        double nilaiAkhir =  (nilaiAbsen + nilaiTugas + nilaiUTS + nilaiUAS);
+        String index = "";
+        if(nilaiAkhir >=80 && nilaiAkhir <= 100 ){
+            index = "A";
+        }else if(nilaiAkhir >=68 && nilaiAkhir <= 79){
+            index = "B";
+        }else if(nilaiAkhir >=56 && nilaiAkhir <= 67){
+            index="C";
+        }else if(nilaiAkhir >=45 && nilaiAkhir <= 55){
+            index="D";
+        }else{
+            index="E";
+        }
+        String keterangan = "";
+        if(hadir2 <= 11){
+            keterangan="Tidak Lulus";
+        }else if((index == "A" || index == "B" || index == "C") && hadir2 >= 11){
+            keterangan="LULUS";
+        }else if((index == "D" || index == "E")){
+            keterangan="Tidak Lulus";
+        }
+        
+        if(txt_kodeMk_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Kode MK Harus diisi");
+            txt_kodeMk_if.requestFocus();
+        }else if(txt_prsAbsen_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi Absen Harus diisi");
+            txt_prsAbsen_if.requestFocus();
+        }else if(txt_prsTugas_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi Tugas Harus diisi");
+            txt_prsTugas_if.requestFocus();
+        }else if(txt_prsUTS_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi UTS Harus diisi");
+            txt_prsUTS_if.requestFocus();
+        }else if(txt_prsUAS_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi UAS Harus diisi");
+            txt_prsUAS_if.requestFocus();
+        }else if(txt_kehadiran_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Kehadiran Harus diisi");
+            txt_kehadiran_if.requestFocus();
+        }else if(hadir2 > 14){
+            JOptionPane.showMessageDialog(null, "Kolom Kehadiran Tidak Boleh Lebih Dari 14");
+            txt_kehadiran_if.requestFocus();
+            
+        }else if(txt_tgs1_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Tugas 1 Harus diisi");
+            txt_tgs1_if.requestFocus();
+        }else if(txt_tgs2_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Tugas 2 Harus diisi");
+            txt_tgs2_if.requestFocus();
+        }else if(txt_tgs3_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Tugas 3 Harus diisi");
+            txt_tgs3_if.requestFocus();
+        }else if(txt_uts_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Nilai UTS Harus diisi");
+            txt_uts_if.requestFocus();
+        }else if(txt_uas_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Nilai UAS Harus diisi");
+            txt_uas_if.requestFocus();
+        }else {
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                                database,
+                                user,
+                                pass);
+                Statement stt = kon.createStatement();
+                String    SQL = "INSERT INTO `java_akdmk_10116465`.`t_simulasi_nilai` "
+                        + "( `kd_mk`, `nama_mk`, `persentase_absen`, "
+                        + "`persentase_tugas`, `persentase_uts`, `persentase_uas`,"
+                        + " `absensi`, `tgs1`, `tgs2`, `tgs3`, `uts`, `uas`, "
+                        + "`nilai_absen`, `nilai_tugas`, `nilai_uts`, `nilai_uas`, "
+                        + "`nilai_akhir`,`indek`, `keterangan`) "
+                        + "VALUES ( "
+                        + "'"+txt_kodeMk_if.getText()+"', "
+                        + "'"+cmb_mata_kuliah_if.getSelectedItem().toString()+"', "
+                        + "'"+txt_prsAbsen_if.getText()+"', "
+                        + "'"+txt_prsTugas_if.getText()+"', "
+                        + "'"+txt_prsUTS_if.getText()+"', "
+                        + "'"+txt_prsUAS_if.getText()+"', "
+                        + "'"+txt_kehadiran_if.getText()+"', "
+                        + "'"+txt_tgs1_if.getText()+"', "
+                        + "'"+txt_tgs2_if.getText()+"', "
+                        + "'"+txt_tgs3_if.getText()+"', "
+                        + "'"+txt_uts_if.getText()+"', "
+                        + "'"+txt_uas_if.getText()+"', "
+                        + "'"+nilaiAbsen+"', '"+nilaiTugas+"', "
+                        + "'"+nilaiUTS+"', '"+nilaiUAS+"', '"+nilaiAkhir+"', "
+                        + "'"+index+"', "
+                        + "'"+keterangan+"')";
+                stt.executeUpdate(SQL);
+                
+                tableModel.setRowCount(0);
+                settableload();
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan_if.setEnabled(false);
+                btn_keluar_if.setEnabled(true);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,
+                        e.getMessage(),"Error",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_btn_simpan_ifActionPerformed
+
+    private void tabel_mahasiswa_ifMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_mahasiswa_ifMouseClicked
+        // TODO add your handling code here:
+        if (evt.getClickCount()==1) {
+            tampil_field();
+        }
+    }//GEN-LAST:event_tabel_mahasiswa_ifMouseClicked
+
+    private void btn_ubah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubah_ifActionPerformed
+        // TODO add your handling code here:
+        String data[] = new String[19];
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        }
+        double pabsen = Double.valueOf(txt_prsAbsen_if.getText()) / 100;
+        double hadir2 = Double.valueOf(txt_kehadiran_if.getText());
+        double hadir = Double.valueOf(txt_kehadiran_if.getText()) / 14;
+        double nilaiAbsen = hadir * 100 * pabsen;
+        double ptugas = Double.valueOf(txt_prsTugas_if.getText()) / 100;
+        double tgs1 = Double.valueOf(txt_tgs1_if.getText());
+        double tgs2 = Double.valueOf(txt_tgs2_if.getText());
+        double tgs3 = Double.valueOf(txt_tgs3_if.getText());
+        double nilaiTugas = ((tgs1+tgs2+tgs3)/3) * ptugas ;
+        double puts = Double.valueOf(txt_prsUTS_if.getText()) ;
+        double nilaiUTS = (Double.valueOf(txt_uts_if.getText()) * puts)/100;
+        double puas = Double.valueOf(txt_prsUAS_if.getText()) ;
+        double nilaiUAS = (Double.valueOf(txt_uas_if.getText()) * puas)/100;
+        double nilaiAkhir =  (nilaiAbsen + nilaiTugas + nilaiUTS + nilaiUAS);
+        String index = "";
+        if(nilaiAkhir >=80 && nilaiAkhir <= 100 ){
+            index = "A";
+        }else if(nilaiAkhir >=68 && nilaiAkhir <= 79){
+            index = "B";
+        }else if(nilaiAkhir >=56 && nilaiAkhir <= 67){
+            index="C";
+        }else if(nilaiAkhir >=45 && nilaiAkhir <= 55){
+            index="D";
+        }else{
+            index="E";
+        }
+        String keterangan = "";
+        if(hadir2 <= 11){
+            keterangan="Tidak Lulus";
+        }else if((index == "A" || index == "B" || index == "C") && hadir2 >= 11){
+            keterangan="LULUS";
+        }else if((index == "D" || index == "E")){
+            keterangan="Tidak Lulus";
+        }
+        
+        if(txt_kodeMk_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Kode MK Harus diisi");
+            txt_kodeMk_if.requestFocus();
+        }else if(txt_prsAbsen_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi Absen Harus diisi");
+            txt_prsAbsen_if.requestFocus();
+        }else if(txt_prsTugas_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi Tugas Harus diisi");
+            txt_prsTugas_if.requestFocus();
+        }else if(txt_prsUTS_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi UTS Harus diisi");
+            txt_prsUTS_if.requestFocus();
+        }else if(txt_prsUAS_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Persentasi UAS Harus diisi");
+            txt_prsUAS_if.requestFocus();
+        }else if(txt_kehadiran_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Kehadiran Harus diisi");
+            txt_kehadiran_if.requestFocus();
+        }else if(hadir2 > 14){
+            JOptionPane.showMessageDialog(null, "Kolom Kehadiran Tidak Boleh Lebih Dari 14");
+            txt_kehadiran_if.requestFocus();
+            
+        }else if(txt_tgs1_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Tugas 1 Harus diisi");
+            txt_tgs1_if.requestFocus();
+        }else if(txt_tgs2_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Tugas 2 Harus diisi");
+            txt_tgs2_if.requestFocus();
+        }else if(txt_tgs3_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Tugas 3 Harus diisi");
+            txt_tgs3_if.requestFocus();
+        }else if(txt_uts_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Nilai UTS Harus diisi");
+            txt_uts_if.requestFocus();
+        }else if(txt_uas_if.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Kolom Nilai UAS Harus diisi");
+            txt_uas_if.requestFocus();
+        }else{
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                    database,
+                    user,
+                    pass);
+            Statement stt = kon.createStatement();
+            String SQL = "UPDATE `java_akdmk_10116465`.`t_simulasi_nilai` SET "
+                    + "`kd_mk` = '"+txt_kodeMk_if.getText()+"' , "
+                    + "`nama_mk` = '"+cmb_mata_kuliah_if.getSelectedItem()+"' , "
+                    + "`persentase_absen` = '"+txt_prsAbsen_if.getText()+"' , "
+                    + "`persentase_tugas` = '"+txt_prsTugas_if.getText()+"' , "
+                    + "`persentase_uts` = '"+txt_prsUTS_if.getText()+"' , "
+                    + "`persentase_uas` = '"+txt_prsUAS_if.getText()+"' , "
+                    + "`absensi` = '"+txt_kehadiran_if.getText()+"' , "
+                    + "`tgs1` = '"+txt_tgs1_if.getText()+"' , `tgs2` = '"+txt_tgs2_if.getText()+"' , "
+                    + "`tgs3` = '"+txt_tgs3_if.getText()+"' , `uts` = '"+txt_uts_if.getText()+"' , "
+                    + "`uas` = '"+txt_uas_if.getText()+"' ,`nilai_absen` = '"+nilaiAbsen+"' , "
+                    + "`nilai_tugas` = '"+nilaiTugas+"' , `nilai_uts` = '"+nilaiUTS+"' ,"
+                    + "`nilai_uas` = '"+nilaiUAS+"' , "
+                    + "`nilai_akhir` = '"+nilaiAkhir+"' , `indek` = '"+index+"' , "
+                    + "`keterangan` = '"+keterangan+"' "
+                    + "WHERE `kode_simulasi` = '"+tableModel.getValueAt(row,0).toString()+"'";
+            stt.executeUpdate(SQL);
+            tableModel.setRowCount(0);
+            settableload();
+            stt.close();
+            kon.close();
+            membersihkan_teks();
+            } catch (Exception e) {
+            }
+        }
+        
+    }//GEN-LAST:event_btn_ubah_ifActionPerformed
+
+    private void btn_hapus_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapus_ifActionPerformed
+        // TODO add your handling code here:
+        //validasi belum meilih row
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else {
+        
+        try {
+            Class.forName(driver);
+            Connection kon = DriverManager.getConnection(
+                    database,
+                    user,
+                    pass);
+            Statement stt = kon.createStatement();
+            String SQL = "DELETE FROM `java_akdmk_10116465`.`t_simulasi_nilai` "
+                    + "WHERE `kode_simulasi` = '"
+                    + tableModel.getValueAt(row, 0).toString() + "';";
+
+            stt.executeUpdate(SQL);
+            tableModel.removeRow(row);
+            stt.close();
+            kon.close();
+            membersihkan_teks();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
+        }
+    }//GEN-LAST:event_btn_hapus_ifActionPerformed
 
     /**
      * @param args the command line arguments
@@ -495,7 +914,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
     private javax.swing.JButton btn_simpan_if;
     private javax.swing.JButton btn_tambah_if;
     private javax.swing.JButton btn_ubah_if;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> cmb_mata_kuliah_if;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -519,7 +938,7 @@ public class frame_simulasiNilaiAkhir_if extends javax.swing.JFrame {
     private javax.swing.JPanel panelIsi;
     private javax.swing.JPanel panelIsi2;
     private javax.swing.JPanel panelJudul;
-    private javax.swing.JTable tabel_simulas_if;
+    private javax.swing.JTable tabel_mahasiswa_if;
     private javax.swing.JTextField txt_kehadiran_if;
     private javax.swing.JTextField txt_kodeMk_if;
     private javax.swing.JTextField txt_prsAbsen_if;
