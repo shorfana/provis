@@ -35,6 +35,12 @@ public class frame_matkul_if extends javax.swing.JFrame {
         pass = dbsetting.SettingPanel("DBPassword");
         tabel_matakuliah_if.setModel(tableModel);
 
+        nonaktifkan_teks();
+        btn_simpan_if.setEnabled(false);
+        btn_batal_if.setEnabled(false);
+        btn_ubah_if.setEnabled(false);
+        btn_hapus_if.setEnabled(false);
+
         settableload();
     }
     String data[] = new String[2];
@@ -281,6 +287,11 @@ public class frame_matkul_if extends javax.swing.JFrame {
         });
 
         btn_keluar_if.setText("Keluar");
+        btn_keluar_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_keluar_ifActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelIsi2Layout = new javax.swing.GroupLayout(panelIsi2);
         panelIsi2.setLayout(panelIsi2Layout);
@@ -386,11 +397,19 @@ public class frame_matkul_if extends javax.swing.JFrame {
         btn_ubah_if.setEnabled(false);
         btn_hapus_if.setEnabled(false);
         btn_keluar_if.setEnabled(false);
+        btn_batal_if.setEnabled(true);
         aktif_teks();
     }//GEN-LAST:event_btn_tambah_ifActionPerformed
 
     private void btn_batal_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batal_ifActionPerformed
         // TODO add your handling code here:
+        membersihkan_teks();
+        nonaktifkan_teks();
+        btn_simpan_if.setEnabled(false);
+        btn_ubah_if.setEnabled(false);
+        btn_hapus_if.setEnabled(false);
+        btn_keluar_if.setEnabled(true);
+        btn_batal_if.setEnabled(false);
     }//GEN-LAST:event_btn_batal_ifActionPerformed
 
     private void tabel_matakuliah_ifMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_matakuliah_ifMouseClicked
@@ -402,8 +421,6 @@ public class frame_matkul_if extends javax.swing.JFrame {
 
     private void btn_simpan_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpan_ifActionPerformed
         // TODO add your handling code here:
-        String data[] = new String[2];
-
         if (txt_kodeMk_if.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null,
                     "Kode M.K tidak boleh kosong, silahkan dilengkapi");
@@ -425,14 +442,14 @@ public class frame_matkul_if extends javax.swing.JFrame {
                         + "' " + txt_namaMk_if.getText() + "')";
 
                 stt.executeUpdate(SQL);
-                data[0] = txt_kodeMk_if.getText();
-                data[1] = txt_namaMk_if.getText();
 
-                tableModel.insertRow(0, data);
+                tableModel.setRowCount(0);
+                settableload();
                 stt.close();
                 kon.close();
                 membersihkan_teks();
                 btn_simpan_if.setEnabled(false);
+                btn_keluar_if.setEnabled(true);
                 nonaktifkan_teks();
 
             } catch (Exception ex) {
@@ -448,16 +465,57 @@ public class frame_matkul_if extends javax.swing.JFrame {
         // TODO add your handling code here:
         //validasi belum memilih row
         if (row == -1) {
-            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!", "WARNING", JOptionPane.WARNING_MESSAGE);
         } else {
-        String kodeMk = txt_kodeMk_if.getText();
-        String namaMk = txt_namaMk_if.getText();
-        if (txt_kodeMk_if.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null,
-                    "Kode M.K tidak boleh kosong, silahkan dilengkapi");
-        } else if (txt_namaMk_if.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null,
-                    "Nama M.K tidak boleh kosong, silahkan dilengkapi");
+            String kodeMk = txt_kodeMk_if.getText();
+            String namaMk = txt_namaMk_if.getText();
+            if (txt_kodeMk_if.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null,
+                        "Kode M.K tidak boleh kosong, silahkan dilengkapi");
+            } else if (txt_namaMk_if.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null,
+                        "Nama M.K tidak boleh kosong, silahkan dilengkapi");
+            } else {
+                try {
+                    Class.forName(driver);
+                    Connection kon = DriverManager.getConnection(
+                            database,
+                            user,
+                            pass);
+                    Statement stt = kon.createStatement();
+                    String SQL = "UPDATE t_mata_kuliah SET kd_mk='" + kodeMk + "', "
+                            + "nama_mk='" + namaMk + "' WHERE kd_mk='"
+                            + tableModel.getValueAt(row, 0).toString() + "';";
+
+                    stt.executeUpdate(SQL);
+
+                    tableModel.setRowCount(0);
+                    settableload();
+                    stt.close();
+                    kon.close();
+                    membersihkan_teks();
+                    btn_simpan_if.setEnabled(false);
+                    btn_ubah_if.setEnabled(false);
+                    btn_hapus_if.setEnabled(false);
+                    nonaktifkan_teks();
+                    // set unselected row
+                    row = -1;
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            ex.getMessage(), "Error",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_ubah_ifActionPerformed
+
+    private void btn_hapus_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapus_ifActionPerformed
+        // TODO add your handling code here:
+        //validasi belum meilih row
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!", "WARNING", JOptionPane.WARNING_MESSAGE);
         } else {
             try {
                 Class.forName(driver);
@@ -466,57 +524,23 @@ public class frame_matkul_if extends javax.swing.JFrame {
                         user,
                         pass);
                 Statement stt = kon.createStatement();
-                String SQL = "UPDATE t_mata_kuliah SET kd_mk='" + kodeMk + "', "
-                        + "nama_mk='" + namaMk + "' WHERE kd_mk='"
-                        + tableModel.getValueAt(row, 0).toString() + "';";
+                String SQL = "Delete From t_mata_kuliah where kd_mk='"
+                        + tableModel.getValueAt(row, 0).toString() + "'";
 
                 stt.executeUpdate(SQL);
-                data[0] = kodeMk;
-                data[1] = namaMk;
-
                 tableModel.removeRow(row);
-                tableModel.insertRow(row, data);
                 stt.close();
                 kon.close();
                 membersihkan_teks();
                 btn_simpan_if.setEnabled(false);
+                btn_ubah_if.setEnabled(false);
+                btn_hapus_if.setEnabled(false);
                 nonaktifkan_teks();
-
+                // set unselected row
+                row = -1;
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null,
-                        ex.getMessage(), "Error",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
+                System.err.println(ex.getMessage());
             }
-        }
-        }
-    }//GEN-LAST:event_btn_ubah_ifActionPerformed
-
-    private void btn_hapus_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapus_ifActionPerformed
-        // TODO add your handling code here:
-        //validasi belum meilih row
-        if (row == -1) {
-            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
-        } else {
-        
-        try {
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(
-                    database,
-                    user,
-                    pass);
-            Statement stt = kon.createStatement();
-            String SQL = "Delete From t_mata_kuliah where kd_mk='"
-                    + tableModel.getValueAt(row, 0).toString() + "'";
-
-            stt.executeUpdate(SQL);
-            tableModel.removeRow(row);
-            stt.close();
-            kon.close();
-            membersihkan_teks();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-        }
         }
     }//GEN-LAST:event_btn_hapus_ifActionPerformed
 
@@ -555,6 +579,13 @@ public class frame_matkul_if extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_txt_cari_mk_ifKeyReleased
+
+    private void btn_keluar_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluar_ifActionPerformed
+        // TODO add your handling code here:
+        frame_utama_if frm_utama = new frame_utama_if();
+        frm_utama.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_keluar_ifActionPerformed
 
     /**
      * @param args the command line arguments
