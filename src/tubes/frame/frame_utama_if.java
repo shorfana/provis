@@ -44,6 +44,8 @@ public class frame_utama_if extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -61,16 +63,31 @@ public class frame_utama_if extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tubes/gambar/clipboard.png"))); // NOI18N
         jLabel1.setText("Data Mata Kuliah");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
         jToolBar1.add(jLabel1);
         jToolBar1.add(jSeparator2);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tubes/gambar/1486164728-118_79708.png"))); // NOI18N
         jLabel3.setText("Data Nilai");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
         jToolBar1.add(jLabel3);
         jToolBar1.add(jSeparator3);
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tubes/gambar/zoom_search_icon-icons.com_75907.png"))); // NOI18N
         jLabel4.setText("Simulasi Nilai Akhir");
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+        });
         jToolBar1.add(jLabel4);
 
         panel1.add(jToolBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 80));
@@ -138,21 +155,12 @@ public class frame_utama_if extends javax.swing.JFrame {
 
         panel1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 650, 330));
 
+        getContentPane().add(panel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
         jMenu1.setText("Menu");
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
 
         pack();
         setLocationRelativeTo(null);
@@ -165,6 +173,30 @@ public class frame_utama_if extends javax.swing.JFrame {
         
         this.setVisible(false);
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        // TODO add your handling code here:
+        frame_matkul_if mhs_if = new frame_matkul_if();
+        mhs_if.setVisible(true);
+        
+        this.setVisible(false);
+    }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        // TODO add your handling code here:
+        frame_nilai_if mhs_if = new frame_nilai_if();
+        mhs_if.setVisible(true);
+        
+        this.setVisible(false);
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
+        frame_simulasiNilaiAkhir_if mhs_if = new frame_simulasiNilaiAkhir_if();
+        mhs_if.setVisible(true);
+        
+        this.setVisible(false);
+    }//GEN-LAST:event_jLabel4MouseClicked
 
     /**
      * @param args the command line arguments
