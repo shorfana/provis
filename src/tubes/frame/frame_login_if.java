@@ -30,7 +30,9 @@ public class frame_login_if extends javax.swing.JFrame {
         user = dbsetting.SettingPanel("DBUsername");
         pass = dbsetting.SettingPanel("DBPassword");
         
+        
     }
+    int percobaan = 0;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -162,6 +164,11 @@ public class frame_login_if extends javax.swing.JFrame {
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "username atau password salah");
+                percobaan += 1;
+                if (percobaan == 3){
+                    JOptionPane.showMessageDialog(this, "ANDA GAGAL LOGIN SEBANYAK 3 KALIII");
+                    System.exit(0);
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
