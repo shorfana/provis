@@ -35,6 +35,12 @@ public class frame_nilai_if extends javax.swing.JFrame {
         pass = dbsetting.SettingPanel("DBPassword");
         tabel_nilai_if.setModel(tableModel);
 
+        nonaktifkan_teks();
+        btn_simpan_if.setEnabled(false);
+        btn_batal_if.setEnabled(false);
+        btn_ubah_if.setEnabled(false);
+        btn_hapus_if.setEnabled(false);
+
         settableload();
         loadNamaMhs();
         loadMk();
@@ -134,53 +140,61 @@ public class frame_nilai_if extends javax.swing.JFrame {
     }
 
     public void tampil_Mahasiswa() {
-        String stat = "";
-        try {
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database, user, pass);
-            Statement stt = kon.createStatement();
-            String SQL = "Select nim from t_mahasiswa where nama='" + cmb_namaMhs.getSelectedItem() + "'";
-            ResultSet res = stt.executeQuery(SQL);
-            while (res.next()) {
-                Object[] ob = new Object[1];
-                ob[0] = res.getString(1);
+        if (cmb_namaMhs.getSelectedIndex() == 0) {
+            txt_nim_if.setText("");
+        } else {
+            String stat = "";
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database, user, pass);
+                Statement stt = kon.createStatement();
+                String SQL = "Select nim from t_mahasiswa where nama='" + cmb_namaMhs.getSelectedItem() + "'";
+                ResultSet res = stt.executeQuery(SQL);
+                while (res.next()) {
+                    Object[] ob = new Object[1];
+                    ob[0] = res.getString(1);
 
-                txt_nim_if.setText((String) ob[0]);
+                    txt_nim_if.setText((String) ob[0]);
+                }
+                res.close();
+                stt.close();
+                kon.close();
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                        JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
             }
-            res.close();
-            stt.close();
-            kon.close();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
-                    JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
         }
     }
 
     public void tampil_Mk() {
-        String stat = "";
-        try {
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(database, user, pass);
-            Statement stt = kon.createStatement();
-            String SQL = "Select kd_mk from t_mata_kuliah "
-                    + "where nama_mk='" + cmb_NamaMk.getSelectedItem() + "'";
-            ResultSet res = stt.executeQuery(SQL);
-            while (res.next()) {
-                Object[] ob = new Object[1];
-                ob[0] = res.getString(1);
+        if (cmb_NamaMk.getSelectedIndex() == 0) {
+            txt_kodeMk_if.setText("");
+        } else {
+            String stat = "";
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(database, user, pass);
+                Statement stt = kon.createStatement();
+                String SQL = "Select kd_mk from t_mata_kuliah "
+                        + "where nama_mk='" + cmb_NamaMk.getSelectedItem() + "'";
+                ResultSet res = stt.executeQuery(SQL);
+                while (res.next()) {
+                    Object[] ob = new Object[1];
+                    ob[0] = res.getString(1);
 
-                txt_kodeMk_if.setText((String) ob[0]);
+                    txt_kodeMk_if.setText((String) ob[0]);
+                }
+                res.close();
+                stt.close();
+                kon.close();
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
+                        JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
             }
-            res.close();
-            stt.close();
-            kon.close();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error",
-                    JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
         }
     }
 
@@ -189,12 +203,13 @@ public class frame_nilai_if extends javax.swing.JFrame {
     private javax.swing.table.DefaultTableModel getDefaultTableModel() {
         return new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Id","Nama", "Nama M.K", "Absensi", "Tgs 1", "Tgs 2", "Tgs"
+                new String[]{"Id", "Nama", "Nama M.K", "Absensi", "Tgs 1", "Tgs 2", "Tgs"
                     + " 3", "UTS", "UAS", "Nilai Absen", "Nilai Tugas", "Nilai "
                     + "UTS", "Nilai UAS", "Nilai Akhir", "Index", "Keterangan"}
         ) {
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false
+                false, false, false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -204,6 +219,8 @@ public class frame_nilai_if extends javax.swing.JFrame {
     }
 
     public void membersihkan_teks() {
+        cmb_NamaMk.setSelectedIndex(0);
+        cmb_namaMhs.setSelectedIndex(0);
         txt_nim_if.setText("");
         txt_kodeMk_if.setText("");
         txt_kehadiran_if.setText("");
@@ -212,6 +229,17 @@ public class frame_nilai_if extends javax.swing.JFrame {
         txt_tgs3_if.setText("");
         txt_uts_if.setText("");
         txt_uas_if.setText("");
+    }
+
+    public void nonaktifkan_teks() {
+        txt_nim_if.setEnabled(false);
+        txt_kodeMk_if.setEnabled(false);
+        txt_kehadiran_if.setEnabled(false);
+        txt_tgs1_if.setEnabled(false);
+        txt_tgs2_if.setEnabled(false);
+        txt_tgs3_if.setEnabled(false);
+        txt_uts_if.setEnabled(false);
+        txt_uas_if.setEnabled(false);
     }
 
     public void aktif_teks() {
@@ -251,7 +279,7 @@ public class frame_nilai_if extends javax.swing.JFrame {
     }
 
     static double nilaiTugas(double tugas_1, double tugas_2, double tugas_3) {
-        double nilaiTugas = (((tugas_1+tugas_2+tugas_3)/3)*(0.25));
+        double nilaiTugas = (((tugas_1 + tugas_2 + tugas_3) / 3) * (0.25));
         return nilaiTugas;
     }
 
@@ -335,8 +363,6 @@ public class frame_nilai_if extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         panelJudul.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -356,10 +382,8 @@ public class frame_nilai_if extends javax.swing.JFrame {
             .addGroup(panelJudulLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
-
-        jPanel1.add(panelJudul, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 0, 490, 60));
 
         panelCaridata.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -369,32 +393,45 @@ public class frame_nilai_if extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Masukan Data");
 
+        txt_cari_if.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_cari_ifKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelCaridataLayout = new javax.swing.GroupLayout(panelCaridata);
         panelCaridata.setLayout(panelCaridataLayout);
         panelCaridataLayout.setHorizontalGroup(
             panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCaridataLayout.createSequentialGroup()
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator2)
-                .addGap(2, 2, 2))
-            .addGroup(panelCaridataLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(txt_cari_if, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelCaridataLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(txt_cari_if, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelCaridataLayout.createSequentialGroup()
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10))))
         );
         panelCaridataLayout.setVerticalGroup(
             panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCaridataLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelCaridataLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel9))
+                    .addGroup(panelCaridataLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCaridataLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCaridataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -463,8 +500,18 @@ public class frame_nilai_if extends javax.swing.JFrame {
         });
 
         btn_batal_if.setText("Batal");
+        btn_batal_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_batal_ifActionPerformed(evt);
+            }
+        });
 
         btn_keluar_if.setText("Keluar");
+        btn_keluar_if.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_keluar_ifActionPerformed(evt);
+            }
+        });
 
         cmb_namaMhs.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-Pilih Nama-" }));
         cmb_namaMhs.addActionListener(new java.awt.event.ActionListener() {
@@ -511,7 +558,7 @@ public class frame_nilai_if extends javax.swing.JFrame {
             .addGroup(panelIsi2Layout.createSequentialGroup()
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelIsi2Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
+                        .addContainerGap()
                         .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIsi2Layout.createSequentialGroup()
                                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,7 +588,7 @@ public class frame_nilai_if extends javax.swing.JFrame {
                                         .addComponent(txt_tgs3_if, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel8)))
-                        .addGap(70, 70, 70)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
                             .addComponent(jLabel13)
@@ -550,15 +597,13 @@ public class frame_nilai_if extends javax.swing.JFrame {
                             .addComponent(jLabel16))
                         .addGap(18, 18, 18)
                         .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txt_uas_if, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_uts_if, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_kodeMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_angkatan_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelIsi2Layout.createSequentialGroup()
-                                .addComponent(cmb_NamaMk, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(8, 8, 8))
-                            .addGroup(panelIsi2Layout.createSequentialGroup()
-                                .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txt_uas_if, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_uts_if, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_kodeMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_angkatan_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(cmb_NamaMk, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIsi2Layout.createSequentialGroup()
                         .addContainerGap()
@@ -570,7 +615,7 @@ public class frame_nilai_if extends javax.swing.JFrame {
                         .addComponent(btn_ubah_if)
                         .addGap(59, 59, 59)
                         .addComponent(btn_hapus_if)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btn_simpan_if)
                         .addGap(68, 68, 68)
                         .addComponent(btn_batal_if)
@@ -582,44 +627,55 @@ public class frame_nilai_if extends javax.swing.JFrame {
             panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelIsi2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel7)
-                    .addComponent(cmb_namaMhs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmb_NamaMk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txt_nim_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13)
-                    .addComponent(txt_kodeMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txt_kehadiran_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel14)
-                    .addComponent(txt_uts_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(txt_tgs1_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15)
-                    .addComponent(txt_uas_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(txt_tgs2_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel16))
-                    .addComponent(txt_angkatan_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(txt_tgs3_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                    .addGroup(panelIsi2Layout.createSequentialGroup()
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(cmb_namaMhs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(txt_nim_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txt_kehadiran_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(txt_tgs1_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(txt_tgs2_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(txt_tgs3_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelIsi2Layout.createSequentialGroup()
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(cmb_NamaMk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(txt_kodeMk_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(txt_uts_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel15)
+                            .addComponent(txt_uas_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel16)
+                            .addComponent(txt_angkatan_if, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(36, 36, 36)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(panelIsi2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_tambah_if)
                     .addComponent(btn_ubah_if)
@@ -627,18 +683,18 @@ public class frame_nilai_if extends javax.swing.JFrame {
                     .addComponent(btn_simpan_if)
                     .addComponent(btn_batal_if)
                     .addComponent(btn_keluar_if))
-                .addGap(16, 16, 16))
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout panelIsiLayout = new javax.swing.GroupLayout(panelIsi);
         panelIsi.setLayout(panelIsiLayout);
         panelIsiLayout.setHorizontalGroup(
             panelIsiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelIsiLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIsiLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelIsiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelCaridata, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelIsi2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelIsiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panelIsi2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelCaridata, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelIsiLayout.setVerticalGroup(
@@ -647,10 +703,27 @@ public class frame_nilai_if extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(panelCaridata, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelIsi2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelIsi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jPanel1.add(panelIsi, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 780, 620));
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelIsi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(panelJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelIsi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -660,7 +733,7 @@ public class frame_nilai_if extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -680,6 +753,7 @@ public class frame_nilai_if extends javax.swing.JFrame {
     private void tabel_nilai_ifMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabel_nilai_ifMouseClicked
         // TODO add your handling code here:
         if (evt.getClickCount() == 1) {
+            aktif_teks();
             tampil_field();
         }
     }//GEN-LAST:event_tabel_nilai_ifMouseClicked
@@ -687,214 +761,227 @@ public class frame_nilai_if extends javax.swing.JFrame {
     private void btn_tambah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambah_ifActionPerformed
         // TODO add your handling code here:
         membersihkan_teks();
-        txt_kodeMk_if.requestFocus();
+        txt_nim_if.requestFocus();
         btn_simpan_if.setEnabled(true);
         btn_ubah_if.setEnabled(false);
         btn_hapus_if.setEnabled(false);
         btn_keluar_if.setEnabled(false);
+        btn_batal_if.setEnabled(true);
         aktif_teks();
     }//GEN-LAST:event_btn_tambah_ifActionPerformed
 
     private void btn_simpan_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpan_ifActionPerformed
         // TODO add your handling code here:
-        
+
         String nim = txt_nim_if.getText();
         String kd_mk = txt_kodeMk_if.getText();
         String txtKehadiran = txt_kehadiran_if.getText();
         String txtTugas1 = txt_tgs1_if.getText();
         String txtTugas2 = txt_tgs2_if.getText();
         String txtTugas3 = txt_tgs3_if.getText();
-        String txtUts   = txt_uts_if.getText();
-        String txtUas = txt_uts_if.getText();
-        
+        String txtUts = txt_uts_if.getText();
+        String txtUas = txt_uas_if.getText();
+
         //validasi
-        if (row == -1) {
-            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
-        } else if ((nim.isEmpty())) {
-            JOptionPane.showMessageDialog(null, "NIM Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        if ((nim.isEmpty())) {
+            JOptionPane.showMessageDialog(null, "NIM Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_nim_if.requestFocus();
-        }else if(kd_mk.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Kode M.K Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (kd_mk.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Kode M.K Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_kodeMk_if.requestFocus();
-        }else if(txtKehadiran.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Kehadiran Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (txtKehadiran.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Kehadiran Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_kehadiran_if.requestFocus();
-        }else if(txtTugas1.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Tugas 1 Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (txtTugas1.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tugas 1 Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_tgs1_if.requestFocus();
-        }else if(txtTugas2.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Tugas 2 Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (txtTugas2.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tugas 2 Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_tgs2_if.requestFocus();
-        }else if(txtTugas3.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Tugas 3 Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (txtTugas3.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tugas 3 Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_tgs3_if.requestFocus();
-        }else if(txtUts.isEmpty()){
-            JOptionPane.showMessageDialog(null,"UTS Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (txtUts.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "UTS Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_uts_if.requestFocus();
-        }else if(txtUas.isEmpty()){
-            JOptionPane.showMessageDialog(null,"UAS Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (txtUas.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "UAS Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_uas_if.requestFocus();
-        }else if(Integer.valueOf(txtKehadiran) > 14){
-            JOptionPane.showMessageDialog(null,"Maksimal Kehadiran adalah 14!!!","WARNING",JOptionPane.WARNING_MESSAGE);
+        } else if (Integer.valueOf(txtKehadiran) > 14) {
+            JOptionPane.showMessageDialog(null, "Maksimal Kehadiran adalah 14!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
             txt_kodeMk_if.requestFocus();
-        }else{
-        
-        double kehadiran = Double.valueOf(txt_kehadiran_if.getText());
-        double tugas_1 = Double.valueOf(txt_tgs1_if.getText());
-        double tugas_2 = Double.valueOf(txt_tgs2_if.getText());
-        double tugas_3 = Double.valueOf(txt_tgs3_if.getText());
-        double uts = Double.valueOf(txt_uts_if.getText());
-        double uas = Double.valueOf(txt_uas_if.getText());
-        double nilaiAbsen = nilaiAbsen(kehadiran);
-        double nilaiTugas =  nilaiTugas(tugas_1, tugas_2, tugas_3);
-        double nilaiUts = nilaiUts(uts);
-        double nilaiUas = nilaiUas(uas);
-        double nilaiAkhir = nilaiAbsen + nilaiTugas + nilaiUts + nilaiUas;
-        String index = index(nilaiAkhir);
-        String keterangan = "";
-        if (kehadiran < 11) {
-            keterangan = "TIDAK LULUS";
-        } else if ((index == "A" || index == "B" || index == "C") && kehadiran >= 11) {
-            keterangan = "LULUS";
-        } else if ((index == "D" || index == "E")) {
-            keterangan = "TIDAK LULUS";
-        }
-        
-        try {
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(
-                    database,
-                    user,
-                    pass);
-            Statement stt = kon.createStatement();
-            String SQL = "INSERT INTO `t_nilai`(`nim`, `kd_mk`, "
-                    + "`absensi`, `tgs1`, `tgs2`, `tgs3`, `uts`, `uas`, `"
-                    + "nilai_absen`, `nilai_tugas`, `nilai_uts`, `nilai_uas`,"
-                    + " `nilai`, `index`, `ket`) VALUES ('" + nim
-                    + "','" + kd_mk + "', '" + kehadiran + "' , "
-                    + "'" + tugas_1 + "','" + tugas_2 + "','" + tugas_3 + "','"
-                    + uts + "','" + uas + "','" + nilaiAbsen + "','" + nilaiTugas 
-                    + "','" + nilaiUts + "','" + nilaiUas + "','" + nilaiAkhir 
-                    + "','" + index + "','" + keterangan + "')";
+        } else {
 
-            stt.executeUpdate(SQL);
-            
-            tableModel.setRowCount(0);
-            settableload();
-            stt.close();
-            kon.close();
-            membersihkan_teks();
-            btn_simpan_if.setEnabled(false);
+            double kehadiran = Double.valueOf(txt_kehadiran_if.getText());
+            double tugas_1 = Double.valueOf(txt_tgs1_if.getText());
+            double tugas_2 = Double.valueOf(txt_tgs2_if.getText());
+            double tugas_3 = Double.valueOf(txt_tgs3_if.getText());
+            double uts = Double.valueOf(txt_uts_if.getText());
+            double uas = Double.valueOf(txt_uas_if.getText());
+            double nilaiAbsen = nilaiAbsen(kehadiran);
+            double nilaiTugas = nilaiTugas(tugas_1, tugas_2, tugas_3);
+            double nilaiUts = nilaiUts(uts);
+            double nilaiUas = nilaiUas(uas);
+            double nilaiAkhir = nilaiAbsen + nilaiTugas + nilaiUts + nilaiUas;
+            String index = index(nilaiAkhir);
+            String keterangan = "";
+            if (kehadiran < 11) {
+                keterangan = "TIDAK LULUS";
+            } else if ((index == "A" || index == "B" || index == "C") && kehadiran >= 11) {
+                keterangan = "LULUS";
+            } else if ((index == "D" || index == "E")) {
+                keterangan = "TIDAK LULUS";
+            }
 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,
-                    ex.getMessage(), "Error",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-        }
+            try {
+                Class.forName(driver);
+                Connection kon = DriverManager.getConnection(
+                        database,
+                        user,
+                        pass);
+                Statement stt = kon.createStatement();
+                String SQL = "INSERT INTO `t_nilai`(`nim`, `kd_mk`, "
+                        + "`absensi`, `tgs1`, `tgs2`, `tgs3`, `uts`, `uas`, `"
+                        + "nilai_absen`, `nilai_tugas`, `nilai_uts`, `nilai_uas`,"
+                        + " `nilai`, `index`, `ket`) VALUES ('" + nim
+                        + "','" + kd_mk + "', '" + kehadiran + "' , "
+                        + "'" + tugas_1 + "','" + tugas_2 + "','" + tugas_3 + "','"
+                        + uts + "','" + uas + "','" + nilaiAbsen + "','" + nilaiTugas
+                        + "','" + nilaiUts + "','" + nilaiUas + "','" + nilaiAkhir
+                        + "','" + index + "','" + keterangan + "')";
+
+                stt.executeUpdate(SQL);
+
+                tableModel.setRowCount(0);
+                settableload();
+                stt.close();
+                kon.close();
+                membersihkan_teks();
+                btn_simpan_if.setEnabled(false);
+                btn_keluar_if.setEnabled(true);
+                nonaktifkan_teks();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,
+                        ex.getMessage(), "Error",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
         }
     }//GEN-LAST:event_btn_simpan_ifActionPerformed
 
     private void btn_ubah_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubah_ifActionPerformed
         // TODO add your handling code here:
-         String nim = txt_nim_if.getText();
+        String nim = txt_nim_if.getText();
         String kd_mk = txt_kodeMk_if.getText();
         String txtKehadiran = txt_kehadiran_if.getText();
         String txtTugas1 = txt_tgs1_if.getText();
         String txtTugas2 = txt_tgs2_if.getText();
         String txtTugas3 = txt_tgs3_if.getText();
-        String txtUts   = txt_uts_if.getText();
+        String txtUts = txt_uts_if.getText();
         String txtUas = txt_uts_if.getText();
-        
-        //validasi
-        if ((nim.isEmpty())) {
-            JOptionPane.showMessageDialog(null, "NIM Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_nim_if.requestFocus();
-        }else if(kd_mk.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Kode M.K Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_kodeMk_if.requestFocus();
-        }else if(txtKehadiran.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Kehadiran Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_kehadiran_if.requestFocus();
-        }else if(txtTugas1.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Tugas 1 Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_tgs1_if.requestFocus();
-        }else if(txtTugas2.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Tugas 2 Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_tgs2_if.requestFocus();
-        }else if(txtTugas3.isEmpty()){
-            JOptionPane.showMessageDialog(null,"Tugas 3 Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_tgs3_if.requestFocus();
-        }else if(txtUts.isEmpty()){
-            JOptionPane.showMessageDialog(null,"UTS Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_uts_if.requestFocus();
-        }else if(txtUas.isEmpty()){
-            JOptionPane.showMessageDialog(null,"UAS Tidak Boleh Kosong!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_uas_if.requestFocus();
-        }else if(Integer.valueOf(txtKehadiran) > 14){
-            JOptionPane.showMessageDialog(null,"Maksimal Kehadiran adalah 14!!!","WARNING",JOptionPane.WARNING_MESSAGE);
-            txt_kodeMk_if.requestFocus();
-        }else{
-        
-        double kehadiran = Double.valueOf(txt_kehadiran_if.getText());
-        double tugas_1 = Double.valueOf(txt_tgs1_if.getText());
-        double tugas_2 = Double.valueOf(txt_tgs2_if.getText());
-        double tugas_3 = Double.valueOf(txt_tgs3_if.getText());
-        double uts = Double.valueOf(txt_uts_if.getText());
-        double uas = Double.valueOf(txt_uas_if.getText());
-        double nilaiAbsen = nilaiAbsen(kehadiran);
-        double nilaiTugas =  nilaiTugas(tugas_1, tugas_2, tugas_3);
-        double nilaiUts = nilaiUts(uts);
-        double nilaiUas = nilaiUas(uas);
-        double nilaiAkhir = nilaiAbsen + nilaiTugas + nilaiUts + nilaiUas;
-        String index = index(nilaiAkhir);
-        String keterangan = "";
-        if (kehadiran < 11) {
-            keterangan = "TIDAK LULUS";
-        } else if ((index == "A" || index == "B" || index == "C") && kehadiran >= 11) {
-            keterangan = "LULUS";
-        } else if ((index == "D" || index == "E")) {
-            keterangan = "TIDAK LULUS";
-        }
-        
-        try {
-            Class.forName(driver);
-            Connection kon = DriverManager.getConnection(
-                    database,
-                    user,
-                    pass);
-            Statement stt = kon.createStatement();
-            String SQL = "UPDATE `t_nilai` SET `nim`='"+nim+"',"
-                    + "`kd_mk`='"+kd_mk+"',"
-                    + "`absensi`='"+kehadiran+"',"
-                    + "`tgs1`='"+tugas_1+"',"
-                    + "`tgs2`='"+tugas_2+"',"
-                    + "`tgs3`='"+tugas_3+"',"
-                    + "`uts`='"+uts+"',"
-                    + "`uas`='"+uas+"',"
-                    + "`nilai_absen`='"+nilaiAbsen+"',"
-                    + "`nilai_tugas`='"+nilaiTugas+"',"
-                    + "`nilai_uts`='"+nilaiUts+"',"
-                    + "`nilai_uas`='"+nilaiUas+"',"
-                    + "`nilai`='"+nilaiAkhir+"',"
-                    + "`index`='"+index+"',"
-                    + "`ket`='"+keterangan+"'"
-                    + " WHERE kd_nilai = '"+tableModel.getValueAt(row,0).toString()+"'";
-            stt.executeUpdate(SQL);
-            
-            tableModel.setRowCount(0);
-            settableload();
-            stt.close();
-            kon.close();
-            membersihkan_teks();
-            btn_simpan_if.setEnabled(false);
 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null,
-                    ex.getMessage(), "Error",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-        }
+        //validasi
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+        } else if ((nim.isEmpty())) {
+            JOptionPane.showMessageDialog(null, "NIM Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_nim_if.requestFocus();
+        } else if (kd_mk.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Kode M.K Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_kodeMk_if.requestFocus();
+        } else if (txtKehadiran.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Kehadiran Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_kehadiran_if.requestFocus();
+        } else if (txtTugas1.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tugas 1 Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_tgs1_if.requestFocus();
+        } else if (txtTugas2.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tugas 2 Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_tgs2_if.requestFocus();
+        } else if (txtTugas3.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tugas 3 Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_tgs3_if.requestFocus();
+        } else if (txtUts.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "UTS Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_uts_if.requestFocus();
+        } else if (txtUas.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "UAS Tidak Boleh Kosong!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_uas_if.requestFocus();
+        } else if (Integer.valueOf(txtKehadiran) > 14) {
+            JOptionPane.showMessageDialog(null, "Maksimal Kehadiran adalah 14!!!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            txt_kodeMk_if.requestFocus();
+        } else {
+            int pilihan = JOptionPane.showOptionDialog(this, "Yakin ingin diubah?",
+                    "Ubah", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (pilihan == JOptionPane.YES_OPTION) {
+
+                double kehadiran = Double.valueOf(txt_kehadiran_if.getText());
+                double tugas_1 = Double.valueOf(txt_tgs1_if.getText());
+                double tugas_2 = Double.valueOf(txt_tgs2_if.getText());
+                double tugas_3 = Double.valueOf(txt_tgs3_if.getText());
+                double uts = Double.valueOf(txt_uts_if.getText());
+                double uas = Double.valueOf(txt_uas_if.getText());
+                double nilaiAbsen = nilaiAbsen(kehadiran);
+                double nilaiTugas = nilaiTugas(tugas_1, tugas_2, tugas_3);
+                double nilaiUts = nilaiUts(uts);
+                double nilaiUas = nilaiUas(uas);
+                double nilaiAkhir = nilaiAbsen + nilaiTugas + nilaiUts + nilaiUas;
+                String index = index(nilaiAkhir);
+                String keterangan = "";
+                if (kehadiran < 11) {
+                    keterangan = "TIDAK LULUS";
+                } else if ((index == "A" || index == "B" || index == "C") && kehadiran >= 11) {
+                    keterangan = "LULUS";
+                } else if ((index == "D" || index == "E")) {
+                    keterangan = "TIDAK LULUS";
+                }
+
+                try {
+                    Class.forName(driver);
+                    Connection kon = DriverManager.getConnection(
+                            database,
+                            user,
+                            pass);
+                    Statement stt = kon.createStatement();
+                    String SQL = "UPDATE `t_nilai` SET `nim`='" + nim + "',"
+                            + "`kd_mk`='" + kd_mk + "',"
+                            + "`absensi`='" + kehadiran + "',"
+                            + "`tgs1`='" + tugas_1 + "',"
+                            + "`tgs2`='" + tugas_2 + "',"
+                            + "`tgs3`='" + tugas_3 + "',"
+                            + "`uts`='" + uts + "',"
+                            + "`uas`='" + uas + "',"
+                            + "`nilai_absen`='" + nilaiAbsen + "',"
+                            + "`nilai_tugas`='" + nilaiTugas + "',"
+                            + "`nilai_uts`='" + nilaiUts + "',"
+                            + "`nilai_uas`='" + nilaiUas + "',"
+                            + "`nilai`='" + nilaiAkhir + "',"
+                            + "`index`='" + index + "',"
+                            + "`ket`='" + keterangan + "'"
+                            + " WHERE kd_nilai = '" + tableModel.getValueAt(row, 0).toString() + "'";
+                    stt.executeUpdate(SQL);
+
+                    tableModel.setRowCount(0);
+                    settableload();
+                    stt.close();
+                    kon.close();
+                    membersihkan_teks();
+                    btn_simpan_if.setEnabled(false);
+                    btn_ubah_if.setEnabled(false);
+                    btn_hapus_if.setEnabled(false);
+                    nonaktifkan_teks();
+
+                    //unselected row
+                    row = -1;
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                            ex.getMessage(), "Error",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            }
         }
     }//GEN-LAST:event_btn_ubah_ifActionPerformed
 
@@ -902,9 +989,57 @@ public class frame_nilai_if extends javax.swing.JFrame {
         // TODO add your handling code here:
         //validasi belum meilih row
         if (row == -1) {
-            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!","WARNING",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Belum Memilih Row !!!", "WARNING", JOptionPane.WARNING_MESSAGE);
         } else {
-        
+            int pilihan = JOptionPane.showOptionDialog(this, "Yakin ingin dihapus?",
+                    "Hapus", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (pilihan == JOptionPane.YES_OPTION) {
+                try {
+                    Class.forName(driver);
+                    Connection kon = DriverManager.getConnection(
+                            database,
+                            user,
+                            pass);
+                    Statement stt = kon.createStatement();
+                    String SQL = "Delete From t_nilai where kd_nilai='"
+                            + tableModel.getValueAt(row, 0).toString() + "'";
+
+                    stt.executeUpdate(SQL);
+                    tableModel.setRowCount(0);
+                    settableload();;
+                    stt.close();
+                    kon.close();
+                    membersihkan_teks();
+                    btn_simpan_if.setEnabled(false);
+                    btn_ubah_if.setEnabled(false);
+                    btn_hapus_if.setEnabled(false);
+                    nonaktifkan_teks();
+                    //unselected row
+                    row = -1;
+                } catch (Exception ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_hapus_ifActionPerformed
+
+    private void btn_batal_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_batal_ifActionPerformed
+        // TODO add your handling code here:
+        membersihkan_teks();
+        nonaktifkan_teks();
+        btn_simpan_if.setEnabled(false);
+        btn_ubah_if.setEnabled(false);
+        btn_hapus_if.setEnabled(false);
+        btn_keluar_if.setEnabled(true);
+        btn_batal_if.setEnabled(false);
+    }//GEN-LAST:event_btn_batal_ifActionPerformed
+
+    private void txt_cari_ifKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cari_ifKeyReleased
+        // TODO add your handling code here:
+        tableModel.setRowCount(0);
+        String cari;
+        cari = txt_cari_if.getText();
+        String SQL = null;
         try {
             Class.forName(driver);
             Connection kon = DriverManager.getConnection(
@@ -912,19 +1047,52 @@ public class frame_nilai_if extends javax.swing.JFrame {
                     user,
                     pass);
             Statement stt = kon.createStatement();
-            String SQL = "Delete From t_nilai where kd_mk='"
-                    + tableModel.getValueAt(row, 0).toString() + "'";
+            SQL = "SELECT t_mahasiswa.nama,t_mata_kuliah.nama_mk,"
+                    + "t_nilai.* FROM t_mahasiswa JOIN t_nilai USING (nim) JOIN "
+                    + "t_mata_kuliah using (kd_mk) WHERE t_mahasiswa.nama LIKE "
+                    + "'%" + cari + "%' OR t_mata_kuliah.nama_mk LIKE "
+                    + "'%" + cari + "%'";
 
-            stt.executeUpdate(SQL);
-            tableModel.removeRow(row);
+            ResultSet res = stt.executeQuery(SQL);
+            while (res.next()) {
+                data[0] = res.getString("kd_nilai");
+                data[1] = res.getString("nama");
+                data[2] = res.getString("nama_mk");
+                data[3] = res.getString("absensi");
+                data[4] = res.getString("tgs1");
+                data[5] = res.getString("tgs2");
+                data[6] = res.getString("tgs3");
+                data[7] = res.getString("uts");
+                data[8] = res.getString("uas");
+                data[9] = res.getString("nilai_absen");
+                data[10] = res.getString("nilai_tugas");
+                data[11] = res.getString("nilai_uts");
+                data[12] = res.getString("nilai_uas");
+                data[13] = res.getString("nilai");
+                data[14] = res.getString("index");
+                data[15] = res.getString("ket");
+
+                tableModel.addRow(data);
+            }
+            res.close();
             stt.close();
             kon.close();
-            membersihkan_teks();
+
         } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null,
+                    ex.getMessage(), "Error",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            System.exit(0);
         }
-        }
-    }//GEN-LAST:event_btn_hapus_ifActionPerformed
+    }//GEN-LAST:event_txt_cari_ifKeyReleased
+
+    private void btn_keluar_ifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_keluar_ifActionPerformed
+        // TODO add your handling code here:
+        frame_utama_if frm_utama = new frame_utama_if();
+        frm_utama.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_keluar_ifActionPerformed
 
     /**
      * @param args the command line arguments
