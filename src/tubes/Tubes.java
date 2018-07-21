@@ -5,6 +5,7 @@
  */
 package tubes;
 
+import tubes.frame.frame_login_if;
 import tubes.frame.frame_utama_if;
 
 /**
@@ -18,8 +19,9 @@ public class Tubes {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        frame_utama_if frm = new frame_utama_if();
+        frame_login_if frm = new frame_login_if();
         frm.setVisible(true);
+        
     }
     
 }
